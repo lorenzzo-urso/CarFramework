@@ -34,6 +34,13 @@ Princípio de produto: **esconde a máquina pesada, ensina só o essencial.**
 
 **Comece por:** [`01-produto/produto.md`](01-produto/produto.md).
 
+### Para os devs / Claude Code
+
+As 12 skills do haCARthon estão em `.claude/skills/` — abrindo este diretório no
+Claude Code, os comandos `/hacarthon-*` ficam disponíveis. Comece com
+`/hacarthon-status`. Contexto completo (incluindo o mapa de caminhos das skills)
+em [`CLAUDE.md`](CLAUDE.md).
+
 ---
 
 ## Estado das 3 entregas obrigatórias
