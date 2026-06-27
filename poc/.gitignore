@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+
+# Node (caso web/ vire React no futuro)
+node_modules/
+dist/
+.parcel-cache/
+
+# Env / segredos — NUNCA commitar
+.env
+.env.*
+*.local
+
+# Dados geoespaciais grandes (tambem ignorados na raiz Dados/)
+*.gpkg
+*.tif
+*.geojson
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
