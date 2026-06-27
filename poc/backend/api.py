@@ -15,6 +15,7 @@ from pydantic import BaseModel
 
 from agent_hub import AgentHub
 from traduzir_llm import escolher_provedor
+from analise_app import analisar_amostra
 
 app = FastAPI(
     title="Compadre / Terra Comum — PoC",
@@ -56,3 +57,10 @@ def agentes():
 def conversa(inp: ConversaIn):
     """O produtor manda o número do CAR + mensagem; o Compadre responde."""
     return hub.run_agent("compadre", inp.numero_car, inp.mensagem)
+
+
+@app.get("/analise/demo")
+def analise_demo():
+    """Análise própria de déficit de APP (P0-8) sobre a geometria de amostra.
+    Em produção, a geometria vem da consulta pública + recorte do GeoPackage SFB."""
+    return analisar_amostra()

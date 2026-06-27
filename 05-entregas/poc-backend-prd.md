@@ -77,11 +77,14 @@ Crítica legítima: para traduzir **um** imóvel, o LLM sozinho quase resolve.
   "o LLM não conseguiria". A P0-7 prova a rastreabilidade que o LLM puro não tem
   (a regra vem do grafo, não é inventada).
 
-### Risco 3 — O scraping do SICAR ao vivo não funciona (anti-bot, JS, captcha)
-É o risco que **mata o demo inteiro**.
-- **Mitigação:** regra de corte (Timeline) — se o conector SICAR não funcionar até
-  o fim do Dia 1, **mockar com JSON estático** dos alertas do imóvel de teste e
-  seguir. O vídeo **nunca** pode depender de conexão ao vivo.
+### Risco 3 — Depender do SICAR ao vivo para as pendências internas
+As pendências (CIB, representante, validação OEMA) ficam atrás de auth Gov.br —
+não dá para puxá-las ao vivo por scraping para um produtor qualquer.
+- **Mitigação:** as pendências vêm do `fixture` no PoC (regra de corte). O que é
+  **real** é a situação+geometria (P0-3) e, sobretudo, a **análise própria de
+  déficit** (P0-8) sobre dado aberto — que não precisa de auth nenhuma.
+- **Claim honesto:** "construído sobre dado aberto + RER" — nunca "consultamos o
+  sistema nacional ao vivo por CPF".
 
 ---
 
@@ -145,10 +148,36 @@ Crítica legítima: para traduzir **um** imóvel, o LLM sozinho quase resolve.
 - Resposta: `{ traducao, pendencias[], proximo_passo, link_sicar, beneficios[] }`
 - Critério: resposta em menos de 10s para demo ao vivo
 
-#### P0-3: Conector SICAR (consulta pública)
-- Consulta `consulta.car.gov.br` pelo número do CAR do imóvel de teste
-- Extrai: situação, alertas e pendências (as telas vistas no SICAR de teste)
-- Critério: retorna pelo menos status e alertas do imóvel de demo
+#### P0-3: Conector SICAR — o que é REAL × o que é mockado
+> ⚠️ **Correção de escopo (honestidade técnica):** a consulta pública
+> (`consulta.car.gov.br`) expõe **situação + geometria** do imóvel pelo número do
+> CAR — **não** as pendências internas (CIB, representante, validação do OEMA),
+> que ficam atrás de login Gov.br do proprietário. Logo:
+
+- **Real e viável (Dev B):** conector à consulta pública → `situação + polígono`
+  pelo número do CAR. Sem auth, sem CPF.
+- **Mockado no PoC (via fixture):** as pendências internas (CIB, representante).
+  Lookup ao vivo delas exige parceria institucional → **Horizonte 2**, não o PoC.
+- Critério: o conector retorna situação + geometria de um imóvel real pelo número;
+  as pendências continuam vindo do `pendencia.fixture.json`.
+
+#### P0-8: Análise própria de déficit de APP ⭐ (o diferencial construível)
+> Em vez de **raspar** a pendência do governo, a Terra Comum **gera a própria
+> análise** a partir de dado aberto + ontologia. É a "validação antecipada" — e
+> não depende de auth do SICAR. Aproxima o PoC do diferencial real.
+
+```
+polígono do imóvel + curso d'água  →  faixa de APP exigida (da ONTOLOGIA, P0-4)
+   → buffer geométrico do rio       →  ∩ com a vegetação existente
+   → déficit de mata ciliar (m²/ha) com a regra e a fonte legal citadas
+```
+- Entrada: geometria (polígono do imóvel, curso d'água, vegetação existente).
+  No PoC: amostra GeoJSON em coordenadas métricas. Em produção: recorte do
+  GeoPackage SFB (Dev B) + geometria da consulta pública (P0-3).
+- Cálculo: `shapely` (buffer + interseção); a **largura da faixa vem da ontologia**.
+- Saída: `{ faixa_exigida_m, deficit_m2, deficit_ha, conforme, regra, fonte }`.
+- Critério: para a amostra, calcula o déficit e cita a regra (Art. 4º) com rastro
+  — prova que o sistema **descobre** o problema, não só repete o que o governo aponta.
 
 #### P0-4: Ontologia mínima do CAR
 - Grafo RDF/OWL com os conceitos essenciais:

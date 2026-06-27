@@ -4,6 +4,7 @@
 fastapi>=0.110          # API /conversa (P0-2)
 uvicorn[standard]>=0.29 # servidor ASGI para rodar a API
 rdflib>=7.0             # ontologia em Turtle / grafo do CAR (P0-4)
+shapely>=2.0            # geometria: buffer de APP + interseção (P0-8)
 pyyaml>=6.0             # ler o manifesto compadre.yaml (P0-1)
 python-dotenv>=1.0      # carregar as keys do .env (nunca commitar o .env)
 
