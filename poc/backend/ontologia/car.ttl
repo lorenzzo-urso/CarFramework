@@ -1,0 +1,182 @@
+@prefix car:  <https://terracomum.org/car#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct:  <http://purl.org/dc/terms/> .
+
+#################################################################
+#  Ontologia mínima do CAR — Terra Comum (PoC)
+#
+#  Objetivo: provar o ponto. A regra que o Compadre cita vem DESTE grafo
+#  (com fonte legal rastreável), nunca é inventada pelo LLM.  -> P0-4 + P0-7
+#
+#  Escopo deliberadamente mínimo: só o necessário para o imóvel de demo
+#  raciocinar sobre APP hídrica, Reserva Legal, pendências e benefícios.
+#################################################################
+
+###  Classes  ###################################################
+
+car:Imovel        a owl:Class ; rdfs:label "Imóvel rural" .
+car:Bioma         a owl:Class ; rdfs:label "Bioma" .
+car:CursoDagua    a owl:Class ; rdfs:label "Curso d'água" .
+car:FaixaAPP      a owl:Class ; rdfs:label "Regra de faixa de APP hídrica" .
+car:RegraRL       a owl:Class ; rdfs:label "Regra de Reserva Legal" .
+car:Pendencia     a owl:Class ; rdfs:label "Tipo de pendência cadastral" .
+car:Beneficio     a owl:Class ; rdfs:label "Benefício desbloqueado pelo CAR" .
+
+###  Propriedades  ##############################################
+
+car:temBioma          a owl:ObjectProperty ; rdfs:domain car:Imovel ; rdfs:range car:Bioma .
+car:temCursoDagua     a owl:ObjectProperty ; rdfs:domain car:Imovel ; rdfs:range car:CursoDagua .
+car:larguraMetros     a owl:DatatypeProperty ; rdfs:label "largura do curso d'água (m)" .
+car:larguraRioMin     a owl:DatatypeProperty .
+car:larguraRioMax     a owl:DatatypeProperty .
+car:faixaProtegidaMetros a owl:DatatypeProperty ; rdfs:label "faixa de mata protegida (m)" .
+car:percentualMinimo  a owl:DatatypeProperty ; rdfs:label "percentual mínimo de RL (%)" .
+car:aplicaBioma       a owl:ObjectProperty .
+car:codigo            a owl:DatatypeProperty .
+car:explicacao        a owl:DatatypeProperty .
+car:oQueFazer         a owl:DatatypeProperty .
+car:exigeSituacao     a owl:DatatypeProperty .
+car:descricao         a owl:DatatypeProperty .
+
+#################################################################
+#  REGRAS DE APP HÍDRICA  — Lei 12.651/2012, Art. 4º, I
+#  Faixa marginal de qualquer curso d'água natural, medida da borda
+#  do leito regular, por largura do curso.
+#################################################################
+
+car:FaixaAPP_ate10 a car:FaixaAPP ;
+    rdfs:label "Curso d'água com menos de 10 m" ;
+    car:larguraRioMin 0 ;
+    car:larguraRioMax 10 ;
+    car:faixaProtegidaMetros 30 ;
+    rdfs:comment "Cursos d'água com menos de 10 metros de largura exigem 30 metros de mata ciliar protegida em cada margem." ;
+    dct:source "Lei 12.651/2012, Art. 4º, I, alínea a" .
+
+car:FaixaAPP_10a50 a car:FaixaAPP ;
+    rdfs:label "Curso d'água de 10 a 50 m" ;
+    car:larguraRioMin 10 ;
+    car:larguraRioMax 50 ;
+    car:faixaProtegidaMetros 50 ;
+    rdfs:comment "Cursos d'água de 10 a 50 metros de largura exigem 50 metros de mata protegida." ;
+    dct:source "Lei 12.651/2012, Art. 4º, I, alínea b" .
+
+car:FaixaAPP_50a200 a car:FaixaAPP ;
+    rdfs:label "Curso d'água de 50 a 200 m" ;
+    car:larguraRioMin 50 ;
+    car:larguraRioMax 200 ;
+    car:faixaProtegidaMetros 100 ;
+    rdfs:comment "Cursos d'água de 50 a 200 metros de largura exigem 100 metros de mata protegida." ;
+    dct:source "Lei 12.651/2012, Art. 4º, I, alínea c" .
+
+car:FaixaAPP_200a600 a car:FaixaAPP ;
+    rdfs:label "Curso d'água de 200 a 600 m" ;
+    car:larguraRioMin 200 ;
+    car:larguraRioMax 600 ;
+    car:faixaProtegidaMetros 200 ;
+    rdfs:comment "Cursos d'água de 200 a 600 metros de largura exigem 200 metros de mata protegida." ;
+    dct:source "Lei 12.651/2012, Art. 4º, I, alínea d" .
+
+car:FaixaAPP_acima600 a car:FaixaAPP ;
+    rdfs:label "Curso d'água acima de 600 m" ;
+    car:larguraRioMin 600 ;
+    car:larguraRioMax 999999 ;
+    car:faixaProtegidaMetros 500 ;
+    rdfs:comment "Cursos d'água com mais de 600 metros de largura exigem 500 metros de mata protegida." ;
+    dct:source "Lei 12.651/2012, Art. 4º, I, alínea e" .
+
+#################################################################
+#  REGRAS DE RESERVA LEGAL  — Lei 12.651/2012, Art. 12
+#################################################################
+
+car:RL_amazonia_floresta a car:RegraRL ;
+    rdfs:label "RL em área de floresta na Amazônia Legal" ;
+    car:aplicaBioma car:Amazonia ;
+    car:percentualMinimo 80 ;
+    rdfs:comment "Imóvel situado em área de floresta na Amazônia Legal: 80% de Reserva Legal." ;
+    dct:source "Lei 12.651/2012, Art. 12, I, alínea a" .
+
+car:RL_amazonia_cerrado a car:RegraRL ;
+    rdfs:label "RL em área de cerrado na Amazônia Legal" ;
+    car:aplicaBioma car:Cerrado ;
+    car:percentualMinimo 35 ;
+    rdfs:comment "Imóvel situado em área de cerrado na Amazônia Legal: 35% de Reserva Legal." ;
+    dct:source "Lei 12.651/2012, Art. 12, I, alínea b" .
+
+car:RL_demais a car:RegraRL ;
+    rdfs:label "RL nas demais regiões do país" ;
+    car:aplicaBioma car:MataAtlantica , car:Caatinga , car:Pampa , car:Pantanal ;
+    car:percentualMinimo 20 ;
+    rdfs:comment "Imóvel situado nas demais regiões do país (fora da Amazônia Legal): 20% de Reserva Legal." ;
+    dct:source "Lei 12.651/2012, Art. 12, II" .
+
+###  Biomas  ####################################################
+
+car:Amazonia      a car:Bioma ; rdfs:label "Amazônia" .
+car:Cerrado       a car:Bioma ; rdfs:label "Cerrado" .
+car:MataAtlantica a car:Bioma ; rdfs:label "Mata Atlântica" .
+car:Caatinga      a car:Bioma ; rdfs:label "Caatinga" .
+car:Pampa         a car:Bioma ; rdfs:label "Pampa" .
+car:Pantanal      a car:Bioma ; rdfs:label "Pantanal" .
+
+#################################################################
+#  PENDÊNCIAS CADASTRAIS  (o que o produtor recebe e não entende)
+#################################################################
+
+car:Pendencia_CIB a car:Pendencia ;
+    car:codigo "CIB_ausente" ;
+    rdfs:label "Código CIB ausente" ;
+    car:explicacao "Falta o código CIB do imóvel — o número de inscrição do imóvel na base da Receita Federal (CAFIR/CIB), que liga o CAR ao registro do imóvel." ;
+    car:oQueFazer "Pegue o comprovante de inscrição do imóvel (ITR/CAFIR) e informe o número do CIB no cadastro." ;
+    dct:source "Manual do CAR + IN RFB nº 2.008/2021 (CAFIR/CIB)" .
+
+car:Pendencia_Representante a car:Pendencia ;
+    car:codigo "representante_ausente" ;
+    rdfs:label "Representante ausente" ;
+    car:explicacao "Nenhum representante foi adicionado ao cadastro. O CAR precisa de ao menos um responsável pelo imóvel." ;
+    car:oQueFazer "Se você mesmo cuida do imóvel, pode se adicionar como representante na etapa correspondente." ;
+    dct:source "Manual do CAR — etapa Representante" .
+
+car:Pendencia_SobreposicaoAPP a car:Pendencia ;
+    car:codigo "sobreposicao_app" ;
+    rdfs:label "Sobreposição em área de APP" ;
+    car:explicacao "O uso declarado do solo invade uma Área de Preservação Permanente — normalmente a faixa de mata que protege um rio ou nascente." ;
+    car:oQueFazer "Ajuste o limite no mapa respeitando a faixa de APP, ou registre a área para regularização no PRA." ;
+    dct:source "Lei 12.651/2012, Art. 4º + Manual do CAR" .
+
+car:Pendencia_RLInsuficiente a car:Pendencia ;
+    car:codigo "rl_insuficiente" ;
+    rdfs:label "Reserva Legal insuficiente" ;
+    car:explicacao "A área de Reserva Legal declarada é menor que o mínimo exigido para o bioma do imóvel." ;
+    car:oQueFazer "Indique área de RL que complete o percentual, ou adira ao PRA para regularizar de forma gradual." ;
+    dct:source "Lei 12.651/2012, Art. 12 + Art. 66" .
+
+#################################################################
+#  BENEFÍCIOS  (o que o CAR regularizado desbloqueia)
+#################################################################
+
+car:Beneficio_PronafEco a car:Beneficio ;
+    rdfs:label "Pronaf Eco" ;
+    car:exigeSituacao "Ativo" ;
+    car:descricao "Linha de crédito do Pronaf para tecnologias e práticas sustentáveis — exige CAR ativo." ;
+    dct:source "Plano Safra da Agricultura Familiar / Resolução BCB" .
+
+car:Beneficio_PSA a car:Beneficio ;
+    rdfs:label "PSA — Pagamento por Serviços Ambientais" ;
+    car:exigeSituacao "Ativo" ;
+    car:descricao "Remuneração ao produtor que conserva vegetação nativa — o CAR é a porta de entrada." ;
+    dct:source "Lei 14.119/2021 (Política Nacional de PSA)" .
+
+car:Beneficio_CRA a car:Beneficio ;
+    rdfs:label "CRA — Cota de Reserva Ambiental" ;
+    car:exigeSituacao "Ativo" ;
+    car:descricao "Título negociável sobre excedente de vegetação nativa — depende de CAR e RL definidos." ;
+    dct:source "Lei 12.651/2012, Art. 44" .
+
+car:Beneficio_SuspensaoSancoes a car:Beneficio ;
+    rdfs:label "Suspensão de sanções" ;
+    car:exigeSituacao "Ativo" ;
+    car:descricao "A adesão ao PRA com CAR regular suspende sanções por infrações cometidas antes de 22/07/2008." ;
+    dct:source "Lei 12.651/2012, Art. 59, §4º e §5º" .
