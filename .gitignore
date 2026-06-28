@@ -1,2 +1,6 @@
 # Configurações locais/pessoais do Claude Code (não compartilhar)
 .claude/settings.local.json
+
+# Scripts locais de inicialização (não commitar)
+iniciar.bat
+*.bat
