@@ -1251,7 +1251,15 @@ llm:
 
           {/* Built-on foundations */}
           <div>
-            <div className="sec-head"><h2>Construído sobre</h2><span className="rule"></span><span style={{ font: "12px var(--font-sans)", color: "var(--text-faint)" }}>infraestrutura pública existente</span></div>
+            <div className="sec-head">
+              <h2>Construído sobre</h2>
+              <span className="rule"></span>
+              <span style={{ font: "12px var(--font-sans)", color: "var(--text-faint)" }}>infraestrutura pública existente</span>
+              <button onClick={() => fireToast("Rastreabilidade de dados em breve — veja o repositório para a ontologia car.ttl")} style={{ display: "flex", alignItems: "center", gap: 6, padding: "5px 13px", background: "transparent", border: "1px solid rgba(47,211,154,.3)", borderRadius: "var(--radius-pill)", cursor: "pointer", font: "var(--fw-semibold) 11.5px var(--font-sans)", color: "var(--accent)", whiteSpace: "nowrap" }}>
+                <i data-lucide="external-link" style={{ width: 12, height: 12 }}></i>
+                Acompanhe a origem dos dados
+              </button>
+            </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {fundacoes.map(f => (
                 <div key={f.nome} style={{ display: "flex", alignItems: "center", gap: 16, background: "var(--surface-card)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-md)", padding: "14px 18px" }}>
