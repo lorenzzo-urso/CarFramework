@@ -796,14 +796,52 @@
       const [selectedProp, setSelectedProp] = React.useState(null);
 
       const imoveis = [
-        { id: "p1", x: 390, y: 268, name: "Sítio Três Rios", car: "MG-3102308-1F306…", ha: 41.7, status: "deficit", deficit_ha: 4.19, app_pct: 8.2 },
-        { id: "p2", x: 640, y: 170, name: "Fazenda Boa Vista", car: "MG-3109451-2A44…", ha: 87.3, status: "conforme", deficit_ha: 0, app_pct: 14.1 },
-        { id: "p3", x: 258, y: 370, name: "Sítio Santa Cruz", car: "MG-3156700-9C12…", ha: 23.1, status: "pendente", deficit_ha: 1.2, app_pct: 5.1 },
-        { id: "p4", x: 790, y: 330, name: "Fazenda Alto Verde", car: "MG-3143906-7B89…", ha: 156.2, status: "conforme", deficit_ha: 0, app_pct: 18.3 },
-        { id: "p5", x: 510, y: 420, name: "Sítio das Palmeiras", car: "MG-3131703-5D67…", ha: 18.9, status: "deficit", deficit_ha: 0.83, app_pct: 3.8 },
-        { id: "p6", x: 165, y: 210, name: "Chácara São João", car: "MG-3117876-3E45…", ha: 12.4, status: "pendente", deficit_ha: 0.5, app_pct: 4.0 },
-        { id: "p7", x: 900, y: 195, name: "Fazenda Cerrado", car: "MG-3129806-6F01…", ha: 243.8, status: "conforme", deficit_ha: 0, app_pct: 22.7 },
-        { id: "p8", x: 680, y: 440, name: "Sítio Esperança", car: "MG-3148704-4A32…", ha: 31.5, status: "deficit", deficit_ha: 2.1, app_pct: 6.3 },
+        { id: "p1", x: 390, y: 268, name: "Sítio Três Rios", car: "MG-3102308-1F306…", ha: 41.7, status: "deficit", deficit_ha: 4.19, app_pct: 8.2,
+          tags: [
+            { id: "TAG-AGRO-101",    tipo: "cartão", label: "Propriedade principal", scan: { dt: "2026-06-20", por: "João Pereira" } },
+            { id: "TAG-AGRO-101-B1", tipo: "marco",  label: "Marco Norte",           scan: { dt: "2026-06-01", por: "Técnico INCRA" } },
+            { id: "TAG-AGRO-101-B2", tipo: "marco",  label: "Marco Sul",             scan: { dt: "2026-05-14", por: "Analista OEMA" } },
+          ]},
+        { id: "p2", x: 640, y: 170, name: "Fazenda Boa Vista", car: "MG-3109451-2A44…", ha: 87.3, status: "conforme", deficit_ha: 0, app_pct: 14.1,
+          tags: [
+            { id: "TAG-AGRO-001",    tipo: "cartão", label: "Propriedade principal", scan: { dt: "2026-06-25", por: "João Pereira" } },
+            { id: "TAG-AGRO-001-B1", tipo: "marco",  label: "Marco Norte",           scan: { dt: "2026-06-28", por: "João Pereira" } },
+            { id: "TAG-AGRO-001-B2", tipo: "marco",  label: "Marco Leste",           scan: { dt: "2026-04-02", por: "João Pereira" } },
+            { id: "TAG-AGRO-001-B3", tipo: "marco",  label: "Marco Sul",             scan: { dt: "2026-05-14", por: "Técnico EMATER" } },
+          ]},
+        { id: "p3", x: 258, y: 370, name: "Sítio Santa Cruz", car: "MG-3156700-9C12…", ha: 23.1, status: "pendente", deficit_ha: 1.2, app_pct: 5.1,
+          tags: [
+            { id: "TAG-AGRO-003",    tipo: "cartão", label: "Propriedade principal", scan: { dt: "2026-06-22", por: "Maria Oliveira" } },
+            { id: "TAG-AGRO-003-B1", tipo: "marco",  label: "Marco Oeste",           scan: { dt: "2026-05-10", por: "Analista OEMA" } },
+          ]},
+        { id: "p4", x: 790, y: 330, name: "Fazenda Alto Verde", car: "MG-3143906-7B89…", ha: 156.2, status: "conforme", deficit_ha: 0, app_pct: 18.3,
+          tags: [
+            { id: "TAG-AGRO-004",    tipo: "cartão", label: "Propriedade principal", scan: { dt: "2026-06-15", por: "Carlos Silva" } },
+            { id: "TAG-AGRO-004-B1", tipo: "marco",  label: "Marco Norte",           scan: { dt: "2026-06-10", por: "Carlos Silva" } },
+            { id: "TAG-AGRO-004-B2", tipo: "marco",  label: "Marco Sul",             scan: { dt: "2026-03-05", por: "Técnico INCRA" } },
+          ]},
+        { id: "p5", x: 510, y: 420, name: "Sítio das Palmeiras", car: "MG-3131703-5D67…", ha: 18.9, status: "deficit", deficit_ha: 0.83, app_pct: 3.8,
+          tags: [
+            { id: "TAG-AGRO-005",    tipo: "cartão", label: "Propriedade principal", scan: { dt: "2026-06-20", por: "João Pereira" } },
+            { id: "TAG-AGRO-005-B1", tipo: "marco",  label: "Marco Norte",           scan: { dt: "2026-06-01", por: "Técnico INCRA" } },
+          ]},
+        { id: "p6", x: 165, y: 210, name: "Chácara São João", car: "MG-3117876-3E45…", ha: 12.4, status: "pendente", deficit_ha: 0.5, app_pct: 4.0,
+          tags: [
+            { id: "TAG-AGRO-006",    tipo: "cartão", label: "Propriedade principal", scan: { dt: "2026-05-30", por: "Ana Souza" } },
+            { id: "TAG-AGRO-006-B1", tipo: "marco",  label: "Marco Norte",           scan: { dt: "2026-04-22", por: "Técnico EMATER" } },
+          ]},
+        { id: "p7", x: 900, y: 195, name: "Fazenda Cerrado", car: "MG-3129806-6F01…", ha: 243.8, status: "conforme", deficit_ha: 0, app_pct: 22.7,
+          tags: [
+            { id: "TAG-AGRO-007",    tipo: "cartão", label: "Propriedade principal", scan: { dt: "2026-06-18", por: "Roberto Lima" } },
+            { id: "TAG-AGRO-007-B1", tipo: "marco",  label: "Marco Norte",           scan: { dt: "2026-05-20", por: "Roberto Lima" } },
+            { id: "TAG-AGRO-007-B2", tipo: "marco",  label: "Marco Leste",           scan: { dt: "2026-04-14", por: "Técnico INCRA" } },
+            { id: "TAG-AGRO-007-B3", tipo: "marco",  label: "Marco Oeste",           scan: { dt: "2026-03-08", por: "Roberto Lima" } },
+          ]},
+        { id: "p8", x: 680, y: 440, name: "Sítio Esperança", car: "MG-3148704-4A32…", ha: 31.5, status: "deficit", deficit_ha: 2.1, app_pct: 6.3,
+          tags: [
+            { id: "TAG-AGRO-008",    tipo: "cartão", label: "Propriedade principal", scan: { dt: "2026-06-10", por: "Ana Souza" } },
+            { id: "TAG-AGRO-008-B1", tipo: "marco",  label: "Marco Sul",             scan: { dt: "2026-05-25", por: "Ana Souza" } },
+          ]},
       ];
 
       const zonas = [
@@ -987,12 +1025,31 @@
                   <TraceSeal tone="alert" icon={<i data-lucide="book-open"></i>} title="Regra aplicada" source="Lei 12.651/2012, Art. 4º, I, alínea a" trace="car:FaixaAPP_ate10" />
                 </div>
               )}
+              {sel.tags && sel.tags.length > 0 && (
+                <div style={{ marginTop: 16, borderTop: "1px solid var(--border-hairline)", paddingTop: 14 }}>
+                  <div style={{ font: "var(--fw-semibold) 10px var(--font-sans)", letterSpacing: ".12em", textTransform: "uppercase", color: "var(--text-faint)", marginBottom: 10 }}>
+                    Tags NFC vinculadas · {sel.tags.length}
+                  </div>
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                    {sel.tags.map(t => (
+                      <div key={t.id} style={{ background: "var(--surface-inset)", border: "1px solid var(--border-hairline)", borderRadius: 6, padding: "8px 12px", minWidth: 0 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 3 }}>
+                          <i data-lucide={t.tipo === "cartão" ? "credit-card" : "map-pin"} style={{ width: 11, height: 11, color: "var(--accent)" }}></i>
+                          <code style={{ font: "10px var(--font-mono)", color: "var(--text-faint)" }}>{t.id}</code>
+                        </div>
+                        <div style={{ font: "var(--fw-semibold) 12px var(--font-sans)", color: "var(--text-body)", marginBottom: 2 }}>{t.label}</div>
+                        <div style={{ font: "11px var(--font-sans)", color: "var(--text-muted)" }}>{t.scan.dt} · {t.scan.por}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
           {!sel && (
             <p style={{ font: "12.5px var(--font-sans)", color: "var(--text-faint)", textAlign: "center", margin: 0 }}>
-              Clique em um imóvel no mapa para ver os detalhes do CAR e o rastro legal.
+              Clique em um imóvel no mapa para ver detalhes do CAR, rastro legal e tags NFC dos marcos.
             </p>
           )}
         </div>
