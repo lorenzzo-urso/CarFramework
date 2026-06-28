@@ -1014,6 +1014,12 @@
                     <div style={{ font: "11px var(--font-sans)", color: "rgba(140,190,170,.6)" }}>{t.scan.dt} · {t.scan.por}</div>
                   </div>
                 ))}
+                <div style={{ borderTop: "1px solid rgba(100,200,180,.12)", marginTop: 6, paddingTop: 8, textAlign: "right" }}>
+                  <button onClick={() => document.getElementById("prop-detail")?.scrollIntoView({ behavior: "smooth" })}
+                    style={{ border: "none", background: "none", color: "rgba(80,210,150,.85)", font: "var(--fw-semibold) 11px var(--font-sans)", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 4, padding: 0 }}>
+                    Ver histórico <i data-lucide="arrow-down" style={{ width: 11, height: 11 }}></i>
+                  </button>
+                </div>
               </div>
             )}
 
@@ -1039,7 +1045,7 @@
 
           {/* Selected property detail */}
           {sel && (
-            <div style={{ background: "var(--surface-card)", border: `1px solid ${statusColor[sel.status]}44`, borderRadius: "var(--radius-lg)", padding: "20px 24px" }}>
+            <div id="prop-detail" style={{ background: "var(--surface-card)", border: `1px solid ${statusColor[sel.status]}44`, borderRadius: "var(--radius-lg)", padding: "20px 24px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
                 <span style={{ width: 10, height: 10, borderRadius: "50%", background: statusColor[sel.status], boxShadow: `0 0 8px ${statusColor[sel.status]}` }}></span>
                 <span style={{ font: "var(--fw-bold) 18px var(--font-display)", color: "var(--text-strong)" }}>{sel.name}</span>
