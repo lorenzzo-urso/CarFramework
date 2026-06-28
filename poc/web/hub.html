@@ -6,13 +6,40 @@
 <title>Car Framework — Agent Hub</title>
 <link rel="stylesheet" href="ds/styles.css" />
 <style>
-  html, body { background: var(--bg-base); }
+  /* ── Paleta clara — alinhado com identidade visual dos slides ── */
+  :root {
+    --bg-base:         #F2F0EB;
+    --surface-card:    #FFFFFF;
+    --surface-raised:  #F9F7F2;
+    --surface-inset:   #ECEAE3;
+    --surface-overlay: rgba(255,255,255,.96);
+    --text-strong: #111111;
+    --text-body:   #2C2C2C;
+    --text-muted:  #5C5A57;
+    --text-faint:  #8A8785;
+    --accent:       #016939;
+    --accent-hover: #014E2B;
+    --leaf-400: #2D7A42;
+    --leaf-500: #1E5C2E;
+    --mint-400: #016939;
+    --forest-800: #EAE8E3;
+    --border-subtle:   #D6D3CA;
+    --border-hairline: #E4E1D8;
+    --glow-accent:     0 2px 16px rgba(1,105,57,.14);
+  }
+  html, body {
+    background: var(--bg-base);
+    background-image:
+      linear-gradient(rgba(0,0,0,.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,0,0,.035) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
   .hero {
     position: relative; overflow: hidden;
     border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);
     background:
-      radial-gradient(120% 140% at 88% -20%, rgba(47,211,154,.10), transparent 55%),
-      linear-gradient(180deg, var(--forest-800), var(--surface-card));
+      radial-gradient(80% 110% at 88% 0%, rgba(1,105,57,.07), transparent 60%),
+      linear-gradient(180deg, #EDECEA, var(--surface-card));
     padding: 30px 32px;
   }
   .hero::after {
@@ -404,11 +431,11 @@
               cada regra é um nó · cada relação é uma aresta
             </span>
           </div>
-          <div style={{ background: "rgba(0,10,5,.55)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-lg)", overflow: "hidden" }}>
+          <div style={{ background: "rgba(237,235,229,1)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-lg)", overflow: "hidden" }}>
             <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", display: "block" }}>
               <defs>
                 <marker id="og-arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto" markerUnits="userSpaceOnUse">
-                  <polygon points="0,0 8,3 0,6" fill="rgba(47,211,154,.5)" />
+                  <polygon points="0,0 8,3 0,6" fill="rgba(1,105,57,.5)" />
                 </marker>
               </defs>
               {edges.map(e => {
@@ -416,26 +443,26 @@
                 return (
                   <g key={e.from + e.to}>
                     <line x1={p.x1} y1={p.y1} x2={p.x2} y2={p.y2}
-                      stroke="rgba(47,211,154,.28)" strokeWidth="1.5"
+                      stroke="rgba(1,105,57,.28)" strokeWidth="1.5"
                       strokeDasharray="5 3" markerEnd="url(#og-arr)" />
                     <text x={p.mx} y={p.my} textAnchor="middle"
-                      style={{ font: "9.5px monospace", fill: "rgba(47,211,154,.42)" }}>{e.label}</text>
+                      style={{ font: "9.5px monospace", fill: "rgba(1,105,57,.42)" }}>{e.label}</text>
                   </g>
                 );
               })}
               {nodes.map(n => (
                 <g key={n.id}>
                   <rect x={n.cx - NW/2} y={n.cy - NH/2} width={NW} height={NH} rx="7"
-                    fill={n.main ? "rgba(47,211,154,.12)" : "rgba(0,18,8,.78)"}
-                    stroke={n.main ? "rgba(47,211,154,.58)" : "rgba(47,211,154,.2)"}
+                    fill={n.main ? "rgba(1,105,57,.12)" : "rgba(250,249,245,1)"}
+                    stroke={n.main ? "rgba(1,105,57,.58)" : "rgba(1,105,57,.2)"}
                     strokeWidth={n.main ? "1.5" : "1"} />
                   <text x={n.cx} y={n.cy - 9} textAnchor="middle"
-                    style={{ font: "10.5px monospace", fill: "#2FD39A" }}>{n.uri}</text>
+                    style={{ font: "10.5px monospace", fill: "#016939" }}>{n.uri}</text>
                   <text x={n.cx} y={n.cy + 7} textAnchor="middle"
-                    style={{ font: "11px system-ui,sans-serif", fill: "rgba(200,235,215,.75)" }}>{n.label}</text>
+                    style={{ font: "11px system-ui,sans-serif", fill: "rgba(17,17,17,.75)" }}>{n.label}</text>
                   {n.fonte && (
                     <text x={n.cx} y={n.cy + 22} textAnchor="middle"
-                      style={{ font: "9px monospace", fill: "rgba(200,235,215,.32)" }}>{n.fonte}</text>
+                      style={{ font: "9px monospace", fill: "rgba(17,17,17,.32)" }}>{n.fonte}</text>
                   )}
                 </g>
               ))}
@@ -453,11 +480,11 @@
       React.useEffect(() => { window.lucide && lucide.createIcons(); });
 
       const fontes = [
-        { name: "SIGEF / INCRA", icon: "map-pin", desc: "Georreferenciamento oficial de imóveis rurais — polígonos certificados pelo governo federal", tipo: "Geoespacial", cor: "#2FD39A" },
+        { name: "SIGEF / INCRA", icon: "map-pin", desc: "Georreferenciamento oficial de imóveis rurais — polígonos certificados pelo governo federal", tipo: "Geoespacial", cor: "#016939" },
         { name: "MapBiomas", icon: "layers", desc: "Cobertura e uso do solo com histórico anual — base para calcular vegetação nativa remanescente", tipo: "Cobertura vegetal", cor: "#7DD49A" },
         { name: "RER (SFB)", icon: "database", desc: "Registro ambiental rural open-source do Serviço Florestal Brasileiro — instância própria em Docker", tipo: "Cadastral", cor: "#4FC3A0" },
         { name: "SICAR / Portal CAR", icon: "file-text", desc: "Cadastros públicos, situação do imóvel e pendências declaratórias por estado", tipo: "Declaratório", cor: "#A8D8B0" },
-        { name: "Lei 12.651/2012", icon: "book-open", desc: "Código Florestal — fonte primária das regras de APP, Reserva Legal, biomas e benefícios", tipo: "Legal", cor: "#2FD39A" },
+        { name: "Lei 12.651/2012", icon: "book-open", desc: "Código Florestal — fonte primária das regras de APP, Reserva Legal, biomas e benefícios", tipo: "Legal", cor: "#016939" },
       ];
 
       const conceitos = [
@@ -493,7 +520,7 @@
             <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
               {camadas.map((c) => (
                 <div key={c.n} style={{ background: "var(--surface-card)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-md)", padding: "18px 16px", position: "relative" }}>
-                  <div style={{ font: "var(--fw-bold) 28px/1 var(--font-mono)", color: "rgba(47,211,154,.15)", position: "absolute", top: 12, right: 14 }}>{c.n}</div>
+                  <div style={{ font: "var(--fw-bold) 28px/1 var(--font-mono)", color: "rgba(1,105,57,.15)", position: "absolute", top: 12, right: 14 }}>{c.n}</div>
                   <i data-lucide={c.icon} style={{ width: 22, height: 22, color: "var(--accent)", marginBottom: 10 }}></i>
                   <div style={{ font: "var(--fw-bold) 14px var(--font-display)", color: "var(--text-strong)", marginBottom: 6 }}>{c.title}</div>
                   <p style={{ font: "12.5px/1.5 var(--font-sans)", color: "var(--text-muted)", margin: 0 }}>{c.desc}</p>
@@ -514,7 +541,7 @@
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {fontes.map((f) => (
                 <div key={f.name} style={{ display: "flex", alignItems: "center", gap: 16, background: "var(--surface-card)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-md)", padding: "14px 18px" }}>
-                  <div style={{ width: 38, height: 38, borderRadius: 10, background: "rgba(47,211,154,.10)", border: "1px solid rgba(47,211,154,.15)", display: "flex", alignItems: "center", justifyContent: "center", flex: "none" }}>
+                  <div style={{ width: 38, height: 38, borderRadius: 10, background: "rgba(1,105,57,.10)", border: "1px solid rgba(1,105,57,.15)", display: "flex", alignItems: "center", justifyContent: "center", flex: "none" }}>
                     <i data-lucide={f.icon} style={{ width: 18, height: 18, color: "var(--accent)" }}></i>
                   </div>
                   <div style={{ flex: 1 }}>
@@ -578,13 +605,13 @@
                 <p style={{ font: "14px/1.65 var(--font-sans)", color: "var(--text-muted)", margin: 0 }}>
                   O Car Framework funciona diferente. As regras do Código Florestal não estão no treinamento do modelo — estão num <strong style={{ color: "var(--text-body)" }}>grafo de conhecimento</strong>. Cada conceito jurídico é um nó (<code style={{ font: "12px var(--font-mono)", color: "var(--mint-400)" }}>car:ReservaLegal</code>), cada relação é uma aresta (<code style={{ font: "12px var(--font-mono)", color: "var(--mint-400)" }}>temRL</code>), cada artigo da lei é a fonte do nó.
                 </p>
-                <div style={{ background: "rgba(0,15,8,.6)", border: "1px solid var(--border-hairline)", borderRadius: "var(--radius-md)", padding: "14px 18px", font: "12.5px/1.9 var(--font-mono)", color: "var(--mint-400)" }}>
+                <div style={{ background: "rgba(232,230,224,1)", border: "1px solid var(--border-hairline)", borderRadius: "var(--radius-md)", padding: "14px 18px", font: "12.5px/1.9 var(--font-mono)", color: "var(--mint-400)" }}>
                   imóvel → temAPP → FaixaAPP_ate10 → cruzamento com geometria SIGEF → déficit calculado
                 </div>
                 <p style={{ font: "13.5px/1.6 var(--font-sans)", color: "var(--text-muted)", margin: 0 }}>
                   Quando o Compadre responde que o Raimundo tem 4,19ha de déficit, essa resposta não foi gerada — foi <strong style={{ color: "var(--text-body)" }}>derivada</strong>. É auditável. É contestável. É o mesmo raciocínio que o analista do OEMA usa para validar.
                 </p>
-                <div style={{ background: "rgba(47,211,154,.07)", border: "1px solid rgba(47,211,154,.18)", borderRadius: "var(--radius-md)", padding: "14px 18px" }}>
+                <div style={{ background: "rgba(1,105,57,.07)", border: "1px solid rgba(1,105,57,.18)", borderRadius: "var(--radius-md)", padding: "14px 18px" }}>
                   <div style={{ font: "var(--fw-semibold) 13.5px var(--font-sans)", color: "var(--text-strong)", marginBottom: 6 }}>
                     Quando o governo publica uma nova portaria alterando as faixas de APP?
                   </div>
@@ -597,11 +624,11 @@
 
             {/* Técnico tab */}
             {ontoTab === "tecnico" && (
-              <div style={{ padding: "24px 28px", display: "flex", flexDirection: "column", gap: 16, background: "rgba(0,10,5,.3)" }}>
+              <div style={{ padding: "24px 28px", display: "flex", flexDirection: "column", gap: 16, background: "rgba(248,246,241,1)" }}>
                 <p style={{ font: "13.5px/1.65 var(--font-sans)", color: "var(--text-muted)", margin: 0 }}>
                   O motor é uma ontologia OWL/RDF (<code style={{ font: "12px var(--font-mono)", color: "var(--mint-400)" }}>car.ttl</code>) sobre o Código Florestal. Os conceitos são classes (<code style={{ font: "12px var(--font-mono)", color: "var(--mint-400)" }}>owl:Class</code>), as relações são object properties (<code style={{ font: "12px var(--font-mono)", color: "var(--mint-400)" }}>owl:ObjectProperty</code>), e as restrições legais são axiomas (<code style={{ font: "12px var(--font-mono)", color: "var(--mint-400)" }}>rdfs:subClassOf</code>, <code style={{ font: "12px var(--font-mono)", color: "var(--mint-400)" }}>owl:Restriction</code>).
                 </p>
-                <div style={{ background: "rgba(0,15,8,.6)", border: "1px solid var(--border-hairline)", borderRadius: "var(--radius-md)", padding: "14px 18px", font: "12px/2.1 var(--font-mono)", color: "var(--mint-400)" }}>
+                <div style={{ background: "rgba(232,230,224,1)", border: "1px solid var(--border-hairline)", borderRadius: "var(--radius-md)", padding: "14px 18px", font: "12px/2.1 var(--font-mono)", color: "var(--mint-400)" }}>
                   pergunta do usuário → extração de entidades → query SPARQL → resposta do grafo → LLM formata
                 </div>
                 <p style={{ font: "13.5px/1.6 var(--font-sans)", color: "var(--text-muted)", margin: 0 }}>
@@ -679,7 +706,7 @@
         { icon: "globe", title: "Bem Público Digital", desc: "Alinhado ao padrão DPG da ONU. Adaptável para outros países e outros códigos florestais." },
       ];
 
-      const toneColor = { amber: "#F5A623", emerald: "#2FD39A", pine: "#016939", leaf: "#4CAF73" };
+      const toneColor = { amber: "#F5A623", emerald: "#016939", pine: "#016939", leaf: "#4CAF73" };
 
       return (
         <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
@@ -747,7 +774,7 @@
           </div>
 
           {/* Publish an agent CTA */}
-          <div style={{ background: "linear-gradient(135deg, rgba(1,105,59,.20), rgba(5,82,51,.10))", border: "1px solid rgba(47,211,154,.2)", borderRadius: "var(--radius-lg)", padding: "24px 28px", display: "flex", alignItems: "center", gap: 20 }}>
+          <div style={{ background: "linear-gradient(135deg, rgba(1,105,59,.20), rgba(5,82,51,.10))", border: "1px solid rgba(1,105,57,.2)", borderRadius: "var(--radius-lg)", padding: "24px 28px", display: "flex", alignItems: "center", gap: 20 }}>
             <div style={{ flex: 1 }}>
               <div style={{ font: "var(--fw-bold) 16px var(--font-display)", color: "var(--text-strong)", marginBottom: 6 }}>Quer publicar um agente?</div>
               <p style={{ font: "13.5px/1.5 var(--font-sans)", color: "var(--text-muted)", margin: 0 }}>
@@ -780,12 +807,12 @@
       ];
 
       const zonas = [
-        { cx: 360, cy: 300, r: 110, label: "MATA CILIAR · RIO GRANDE", strokeColor: "rgba(47,211,154,.25)" },
+        { cx: 360, cy: 300, r: 110, label: "MATA CILIAR · RIO GRANDE", strokeColor: "rgba(1,105,57,.25)" },
         { cx: 720, cy: 240, r: 85, label: "RESERVA LEGAL · FAZENDA BOA VISTA", strokeColor: "rgba(100,200,150,.20)" },
         { cx: 510, cy: 390, r: 65, label: "APP · NASCENTE", strokeColor: "rgba(70,150,210,.22)" },
       ];
 
-      const statusColor = { conforme: "#2FD39A", deficit: "#FF6B6B", pendente: "#F5A623" };
+      const statusColor = { conforme: "#016939", deficit: "#FF6B6B", pendente: "#F5A623" };
       const statusLabel = { conforme: "CAR conforme", deficit: "Déficit APP", pendente: "Pend. análise" };
 
       const totals = {
@@ -823,7 +850,7 @@
             {/* Top bar */}
             <div style={{ position: "absolute", top: 14, left: 16, zIndex: 10, display: "flex", alignItems: "center", gap: 8 }}>
               <span style={{ font: "var(--fw-bold) 10px var(--font-mono)", letterSpacing: ".18em", textTransform: "uppercase", color: "#7DD4C4" }}>TERRITÓRIO · CAR GRAPH</span>
-              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#2FD39A", boxShadow: "0 0 8px #2FD39A", animation: "pulse-dot 2s infinite" }}></span>
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#016939", boxShadow: "0 0 8px #016939", animation: "pulse-dot 2s infinite" }}></span>
             </div>
 
             {/* Zoom controls */}
@@ -871,7 +898,7 @@
               {/* Biome zones */}
               {zonas.map((z, i) => (
                 <g key={i}>
-                  <circle cx={z.cx} cy={z.cy} r={z.r} fill="rgba(47,211,154,.04)" stroke={z.strokeColor} strokeWidth="1" strokeDasharray="5 4"/>
+                  <circle cx={z.cx} cy={z.cy} r={z.r} fill="rgba(1,105,57,.04)" stroke={z.strokeColor} strokeWidth="1" strokeDasharray="5 4"/>
                   <text x={z.cx} y={z.cy + z.r + 13} textAnchor="middle" fill="rgba(100,200,170,.4)" fontSize="8" fontFamily="monospace" letterSpacing="1.5">{z.label}</text>
                 </g>
               ))}
@@ -920,7 +947,7 @@
             <div style={{ display: "flex", gap: 28, padding: "14px 22px", borderTop: "1px solid rgba(100,200,180,.08)", background: "rgba(4,10,18,.92)" }}>
               {[
                 { v: totals.total, l: "IMÓVEIS", c: "var(--text-strong)" },
-                { v: totals.conformes, l: "CONFORMES", c: "#2FD39A" },
+                { v: totals.conformes, l: "CONFORMES", c: "#016939" },
                 { v: totals.deficit, l: "COM DÉFICIT", c: "#FF6B6B" },
                 { v: totals.pendente, l: "PENDENTES", c: "#F5A623" },
               ].map(s => (
@@ -988,9 +1015,9 @@
             <div style={{ display: "flex", gap: 5 }}>
               {["#FF6058","#FFBD2E","#28C840"].map(c => <span key={c} style={{ width: 9, height: 9, borderRadius: "50%", background: c, opacity: .7 }}></span>)}
             </div>
-            {title && <span style={{ font: "var(--fw-semibold) 11px var(--font-mono)", color: "rgba(200,230,220,.6)", flex: 1 }}>{title}</span>}
-            {badge && <span style={{ font: "10px var(--font-mono)", color: "rgba(47,211,154,.6)", letterSpacing: ".08em" }}>{badge}</span>}
-            <button onClick={copy} style={{ border: "1px solid rgba(100,200,180,.2)", background: "rgba(47,211,154,.07)", color: copied ? "var(--accent)" : "rgba(200,230,220,.5)", borderRadius: "var(--radius-sm)", padding: "3px 9px", font: "10.5px var(--font-mono)", cursor: "pointer", transition: "color .2s" }}>
+            {title && <span style={{ font: "var(--fw-semibold) 11px var(--font-mono)", color: "rgba(17,17,17,.6)", flex: 1 }}>{title}</span>}
+            {badge && <span style={{ font: "10px var(--font-mono)", color: "rgba(1,105,57,.6)", letterSpacing: ".08em" }}>{badge}</span>}
+            <button onClick={copy} style={{ border: "1px solid rgba(1,105,57,.2)", background: "rgba(1,105,57,.07)", color: copied ? "var(--accent)" : "rgba(17,17,17,.5)", borderRadius: "var(--radius-sm)", padding: "3px 9px", font: "10.5px var(--font-mono)", cursor: "pointer", transition: "color .2s" }}>
               {copied ? "copiado ✓" : "copiar"}
             </button>
           </div>
@@ -1004,12 +1031,12 @@
     function StepCard({ n, method, path, desc }) {
       return (
         <div style={{ display: "flex", gap: 16, background: "var(--surface-card)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-md)", padding: "16px 18px", alignItems: "flex-start" }}>
-          <div style={{ width: 32, height: 32, borderRadius: 9, background: "rgba(47,211,154,.10)", border: "1px solid rgba(47,211,154,.2)", display: "flex", alignItems: "center", justifyContent: "center", flex: "none" }}>
+          <div style={{ width: 32, height: 32, borderRadius: 9, background: "rgba(1,105,57,.10)", border: "1px solid rgba(1,105,57,.2)", display: "flex", alignItems: "center", justifyContent: "center", flex: "none" }}>
             <span style={{ font: "var(--fw-bold) 13px var(--font-mono)", color: "var(--accent)" }}>{n}</span>
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-              <span style={{ font: "var(--fw-bold) 10px var(--font-mono)", color: method === "POST" ? "#F5A623" : "var(--accent)", background: method === "POST" ? "rgba(245,166,35,.1)" : "rgba(47,211,154,.1)", border: `1px solid ${method === "POST" ? "rgba(245,166,35,.2)" : "rgba(47,211,154,.2)"}`, borderRadius: "var(--radius-sm)", padding: "2px 7px" }}>{method}</span>
+              <span style={{ font: "var(--fw-bold) 10px var(--font-mono)", color: method === "POST" ? "#F5A623" : "var(--accent)", background: method === "POST" ? "rgba(245,166,35,.1)" : "rgba(1,105,57,.1)", border: `1px solid ${method === "POST" ? "rgba(245,166,35,.2)" : "rgba(1,105,57,.2)"}`, borderRadius: "var(--radius-sm)", padding: "2px 7px" }}>{method}</span>
               <code style={{ font: "13px var(--font-mono)", color: "var(--text-strong)" }}>{path}</code>
             </div>
             <p style={{ font: "13px/1.5 var(--font-sans)", color: "var(--text-muted)", margin: "6px 0 0" }}>{desc}</p>
@@ -1092,7 +1119,7 @@ llm:
         { uri: "car:Notificacao", repr: "Notificação de pendência ao produtor", artigo: "Art. 29, §3º", cat: "Pendência" },
       ];
 
-      const catColor = { APP: "#2FD39A", RL: "#4FC3A0", Pendência: "#F5A623", Benefício: "#7DD4C4" };
+      const catColor = { APP: "#016939", RL: "#4FC3A0", Pendência: "#F5A623", Benefício: "#7DD4C4" };
 
       return (
         <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
@@ -1203,7 +1230,7 @@ llm:
       return (
         <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
           {/* Hero manifesto */}
-          <div style={{ position: "relative", overflow: "hidden", border: "1px solid rgba(47,211,154,.2)", borderRadius: "var(--radius-lg)", background: "linear-gradient(135deg, rgba(1,80,45,.35), rgba(4,20,14,.8))", padding: "36px 36px 32px" }}>
+          <div style={{ position: "relative", overflow: "hidden", border: "1px solid rgba(1,105,57,.2)", borderRadius: "var(--radius-lg)", background: "linear-gradient(135deg, rgba(1,105,57,.07), rgba(1,105,57,.02))", padding: "36px 36px 32px" }}>
             <div style={{ position: "absolute", right: -20, top: -20, width: 240, height: 240, background: "url('ds/assets/leaf-mark-cut.png') no-repeat center/contain", opacity: .04 }}></div>
             <div className="eyebrow">Manifesto · Bem Público Digital</div>
             <h1 style={{ font: "var(--fw-bold) 38px/1.05 var(--font-display)", color: "var(--text-strong)", letterSpacing: "-.03em", margin: "10px 0 0" }}>
@@ -1220,7 +1247,7 @@ llm:
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
               {criterios.map(c => (
                 <div key={c.title} style={{ display: "flex", gap: 13, background: "var(--surface-card)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-md)", padding: "15px 16px" }}>
-                  <div style={{ width: 34, height: 34, borderRadius: 10, background: c.ok ? "rgba(47,211,154,.12)" : "rgba(255,100,100,.1)", display: "flex", alignItems: "center", justifyContent: "center", flex: "none" }}>
+                  <div style={{ width: 34, height: 34, borderRadius: 10, background: c.ok ? "rgba(1,105,57,.12)" : "rgba(255,100,100,.1)", display: "flex", alignItems: "center", justifyContent: "center", flex: "none" }}>
                     <i data-lucide={c.icon} style={{ width: 17, height: 17, color: c.ok ? "var(--accent)" : "#FF6B6B" }}></i>
                   </div>
                   <div style={{ flex: 1 }}>
@@ -1255,7 +1282,7 @@ llm:
               <h2>Construído sobre</h2>
               <span className="rule"></span>
               <span style={{ font: "12px var(--font-sans)", color: "var(--text-faint)" }}>infraestrutura pública existente</span>
-              <button onClick={() => fireToast("Rastreabilidade de dados em breve — veja o repositório para a ontologia car.ttl")} style={{ display: "flex", alignItems: "center", gap: 6, padding: "5px 13px", background: "transparent", border: "1px solid rgba(47,211,154,.3)", borderRadius: "var(--radius-pill)", cursor: "pointer", font: "var(--fw-semibold) 11.5px var(--font-sans)", color: "var(--accent)", whiteSpace: "nowrap" }}>
+              <button onClick={() => fireToast("Rastreabilidade de dados em breve — veja o repositório para a ontologia car.ttl")} style={{ display: "flex", alignItems: "center", gap: 6, padding: "5px 13px", background: "transparent", border: "1px solid rgba(1,105,57,.3)", borderRadius: "var(--radius-pill)", cursor: "pointer", font: "var(--fw-semibold) 11.5px var(--font-sans)", color: "var(--accent)", whiteSpace: "nowrap" }}>
                 <i data-lucide="external-link" style={{ width: 12, height: 12 }}></i>
                 Acompanhe a origem dos dados
               </button>
@@ -1263,7 +1290,7 @@ llm:
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {fundacoes.map(f => (
                 <div key={f.nome} style={{ display: "flex", alignItems: "center", gap: 16, background: "var(--surface-card)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-md)", padding: "14px 18px" }}>
-                  <div style={{ width: 38, height: 38, borderRadius: 10, background: "rgba(47,211,154,.08)", border: "1px solid rgba(47,211,154,.15)", display: "flex", alignItems: "center", justifyContent: "center", flex: "none" }}>
+                  <div style={{ width: 38, height: 38, borderRadius: 10, background: "rgba(1,105,57,.08)", border: "1px solid rgba(1,105,57,.15)", display: "flex", alignItems: "center", justifyContent: "center", flex: "none" }}>
                     <i data-lucide={f.icone} style={{ width: 18, height: 18, color: "var(--accent)" }}></i>
                   </div>
                   <div style={{ flex: 1 }}>
@@ -1277,7 +1304,7 @@ llm:
           </div>
 
           {/* Reuse banner */}
-          <div style={{ display: "flex", gap: 20, background: "linear-gradient(90deg, rgba(1,105,59,.18), transparent)", border: "1px solid rgba(47,211,154,.18)", borderLeft: "3px solid var(--accent)", borderRadius: "var(--radius-md)", padding: "20px 24px", alignItems: "center" }}>
+          <div style={{ display: "flex", gap: 20, background: "linear-gradient(90deg, rgba(1,105,59,.18), transparent)", border: "1px solid rgba(1,105,57,.18)", borderLeft: "3px solid var(--accent)", borderRadius: "var(--radius-md)", padding: "20px 24px", alignItems: "center" }}>
             <i data-lucide="globe-2" style={{ width: 28, height: 28, color: "var(--accent)", flex: "none" }}></i>
             <div>
               <div style={{ font: "var(--fw-bold) 15px var(--font-display)", color: "var(--text-strong)", marginBottom: 4 }}>Além do Brasil</div>
