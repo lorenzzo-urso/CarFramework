@@ -449,6 +449,7 @@
        PROTOCOLO PAGE
     ===================================================== */
     function ProtocoloPage() {
+      const [ontoTab, setOntoTab] = React.useState("jurado");
       React.useEffect(() => { window.lucide && lucide.createIcons(); });
 
       const fontes = [
@@ -545,14 +546,88 @@
             </div>
           </div>
 
-          {/* Why ontology matters */}
-          <div style={{ background: "linear-gradient(135deg, rgba(1,105,59,.15), transparent)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-lg)", padding: "24px 28px" }}>
-            <div style={{ font: "var(--fw-bold) 16px var(--font-display)", color: "var(--text-strong)", marginBottom: 10 }}>
-              Por que ontologia e não só texto?
+          {/* Why ontology matters — tabbed */}
+          <div style={{ border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-lg)", overflow: "hidden" }}>
+            {/* Tab bar */}
+            <div style={{ display: "flex", borderBottom: "1px solid var(--border-subtle)", background: "var(--surface-inset)" }}>
+              {[
+                { id: "jurado", label: "Para o jurado", icon: "users" },
+                { id: "tecnico", label: "Banca técnica", icon: "code-2" },
+              ].map(t => (
+                <button key={t.id} onClick={() => setOntoTab(t.id)} style={{
+                  display: "flex", alignItems: "center", gap: 7, padding: "11px 20px",
+                  background: ontoTab === t.id ? "var(--surface-card)" : "transparent",
+                  border: "none", borderBottom: ontoTab === t.id ? "2px solid var(--accent)" : "2px solid transparent",
+                  cursor: "pointer",
+                  font: `${ontoTab === t.id ? "var(--fw-semibold)" : "var(--fw-regular)"} 13px var(--font-sans)`,
+                  color: ontoTab === t.id ? "var(--text-strong)" : "var(--text-faint)",
+                  marginBottom: -1,
+                }}>
+                  <i data-lucide={t.icon} style={{ width: 14, height: 14 }}></i>
+                  {t.label}
+                </button>
+              ))}
             </div>
-            <p style={{ font: "14px/1.6 var(--font-sans)", color: "var(--text-muted)", margin: 0 }}>
-              Chatbots respondem com base em probabilidade. O Car Framework responde com base em <strong style={{ color: "var(--text-body)" }}>raciocínio sobre grafo</strong>: cada resposta cita a regra concreta, vinda da ontologia — nunca inventada pelo LLM. Isso é auditável, contestável, confiável. O mesmo raciocínio serve o produtor, o analista, o banco e o governo — sem contradição.
-            </p>
+
+            {/* Jurado tab */}
+            {ontoTab === "jurado" && (
+              <div style={{ padding: "24px 28px", display: "flex", flexDirection: "column", gap: 16, background: "linear-gradient(135deg, rgba(1,105,59,.08), transparent)" }}>
+                <p style={{ font: "14px/1.65 var(--font-sans)", color: "var(--text-muted)", margin: 0 }}>
+                  A maioria dos chatbots "sabe" a resposta porque foi treinado com texto. Se você pergunta sobre Reserva Legal, ele reproduz o que leu — e pode estar certo, pode estar levemente errado, e você não tem como verificar.
+                </p>
+                <p style={{ font: "14px/1.65 var(--font-sans)", color: "var(--text-muted)", margin: 0 }}>
+                  O Car Framework funciona diferente. As regras do Código Florestal não estão no treinamento do modelo — estão num <strong style={{ color: "var(--text-body)" }}>grafo de conhecimento</strong>. Cada conceito jurídico é um nó (<code style={{ font: "12px var(--font-mono)", color: "var(--mint-400)" }}>car:ReservaLegal</code>), cada relação é uma aresta (<code style={{ font: "12px var(--font-mono)", color: "var(--mint-400)" }}>temRL</code>), cada artigo da lei é a fonte do nó.
+                </p>
+                <div style={{ background: "rgba(0,15,8,.6)", border: "1px solid var(--border-hairline)", borderRadius: "var(--radius-md)", padding: "14px 18px", font: "12.5px/1.9 var(--font-mono)", color: "var(--mint-400)" }}>
+                  imóvel → temAPP → FaixaAPP_ate10 → cruzamento com geometria SIGEF → déficit calculado
+                </div>
+                <p style={{ font: "13.5px/1.6 var(--font-sans)", color: "var(--text-muted)", margin: 0 }}>
+                  Quando o Compadre responde que o Raimundo tem 4,19ha de déficit, essa resposta não foi gerada — foi <strong style={{ color: "var(--text-body)" }}>derivada</strong>. É auditável. É contestável. É o mesmo raciocínio que o analista do OEMA usa para validar.
+                </p>
+                <div style={{ background: "rgba(47,211,154,.07)", border: "1px solid rgba(47,211,154,.18)", borderRadius: "var(--radius-md)", padding: "14px 18px" }}>
+                  <div style={{ font: "var(--fw-semibold) 13.5px var(--font-sans)", color: "var(--text-strong)", marginBottom: 6 }}>
+                    Quando o governo publica uma nova portaria alterando as faixas de APP?
+                  </div>
+                  <p style={{ font: "13.5px/1.55 var(--font-sans)", color: "var(--text-muted)", margin: 0 }}>
+                    Edita-se um nó. Todos os agentes — Compadre, Auditor, Crédito — ficam corretos automaticamente. Nenhum modelo precisa ser retreinado.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Técnico tab */}
+            {ontoTab === "tecnico" && (
+              <div style={{ padding: "24px 28px", display: "flex", flexDirection: "column", gap: 16, background: "rgba(0,10,5,.3)" }}>
+                <p style={{ font: "13.5px/1.65 var(--font-sans)", color: "var(--text-muted)", margin: 0 }}>
+                  O motor é uma ontologia OWL/RDF (<code style={{ font: "12px var(--font-mono)", color: "var(--mint-400)" }}>car.ttl</code>) sobre o Código Florestal. Os conceitos são classes (<code style={{ font: "12px var(--font-mono)", color: "var(--mint-400)" }}>owl:Class</code>), as relações são object properties (<code style={{ font: "12px var(--font-mono)", color: "var(--mint-400)" }}>owl:ObjectProperty</code>), e as restrições legais são axiomas (<code style={{ font: "12px var(--font-mono)", color: "var(--mint-400)" }}>rdfs:subClassOf</code>, <code style={{ font: "12px var(--font-mono)", color: "var(--mint-400)" }}>owl:Restriction</code>).
+                </p>
+                <div style={{ background: "rgba(0,15,8,.6)", border: "1px solid var(--border-hairline)", borderRadius: "var(--radius-md)", padding: "14px 18px", font: "12px/2.1 var(--font-mono)", color: "var(--mint-400)" }}>
+                  pergunta do usuário → extração de entidades → query SPARQL → resposta do grafo → LLM formata
+                </div>
+                <p style={{ font: "13.5px/1.6 var(--font-sans)", color: "var(--text-muted)", margin: 0 }}>
+                  O modelo é um <strong style={{ color: "var(--text-body)" }}>formatador</strong>, não um raciocinador — o raciocínio fica no grafo.
+                </p>
+                <div style={{ font: "var(--fw-semibold) 13px var(--font-sans)", color: "var(--text-strong)" }}>
+                  Isso resolve três problemas que RAG não resolve:
+                </div>
+                {[
+                  { icon: "check-circle", title: "Consistência garantida", desc: "Dois agentes nunca contradizem a mesma regra, porque consultam o mesmo grafo." },
+                  { icon: "shield", title: "Rastreabilidade formal", desc: "Cada resposta tem um path no grafo exportável como prova (TraceSeal)." },
+                  { icon: "git-merge", title: "Evolução controlada", desc: "Mudança de lei = mudança de axioma, propagação automática via inferência OWL." },
+                ].map(item => (
+                  <div key={item.title} style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
+                    <i data-lucide={item.icon} style={{ width: 16, height: 16, color: "var(--accent)", marginTop: 2, flex: "none" }}></i>
+                    <div>
+                      <div style={{ font: "var(--fw-semibold) 13.5px var(--font-sans)", color: "var(--text-strong)" }}>{item.title}</div>
+                      <div style={{ font: "13px/1.5 var(--font-sans)", color: "var(--text-muted)" }}>{item.desc}</div>
+                    </div>
+                  </div>
+                ))}
+                <p style={{ font: "13px/1.6 var(--font-sans)", color: "var(--text-faint)", margin: 0, borderTop: "1px solid var(--border-hairline)", paddingTop: 14 }}>
+                  A ontologia hoje cobre APP, Reserva Legal, pendências cadastrais e elegibilidade a benefícios. Extensível: novos módulos (<code style={{ font: "11.5px var(--font-mono)", color: "var(--mint-400)" }}>car:Carbono</code>, <code style={{ font: "11.5px var(--font-mono)", color: "var(--mint-400)" }}>car:PSA</code>) são namespaces adicionais sobre o mesmo triplestore.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       );
