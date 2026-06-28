@@ -106,6 +106,22 @@ function escape(s) {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
+// monta a resposta do Professor (texto livre, parágrafos, sem selos)
+function renderProfessor(r) {
+  const linhas = r.resposta.split("\n").filter(l => l.trim());
+  return linhas.map(l => `<p style="margin:0 0 6px">${escape(l)}</p>`).join("");
+}
+
+function bastidoresProfessor(pergunta) {
+  consoleLog.innerHTML = "";
+  logLinha(`<span class="cmd">$ hub.detect_intent(<b>"${escape(pergunta.slice(0, 30))}…"</b>)</span>`);
+  setTimeout(() => logLinha(`<span class="out">↳ intenção: <span class="val">pergunta_conceitual</span></span>`), 260);
+  setTimeout(() => logLinha(`<span class="cmd">$ hub.delegate(<b>"compadre"</b> → <b>"professor"</b>)</span>`), 520);
+  setTimeout(() => logLinha(`<span class="out">↳ tool: <span class="lei">consultar_legislacao</span> · <span class="lei">explicar_conceitos</span></span>`), 780);
+  setTimeout(() => logLinha(`<span class="cmd">$ professor_llm(<b>${escape(provedorLLM)}</b>) → explicação</span>`), 1040);
+  setTimeout(() => logLinha(`<span class="cmd pisca"></span>`), 1300);
+}
+
 // monta a resposta rica do Compadre (tradução + pendências + selo + benefícios)
 function renderResposta(r) {
   let html = escape(r.traducao);
@@ -153,9 +169,9 @@ function renderResposta(r) {
 
 async function consultar(numeroCar, mensagem) {
   try {
-    // timeout: se o backend não responder em 2,5s, cai no fallback (não trava a UI)
+    // timeout maior para o Professor (resposta longa com LLM)
     const ctrl = new AbortController();
-    const t = setTimeout(() => ctrl.abort(), 2500);
+    const t = setTimeout(() => ctrl.abort(), 15000);
     const resp = await fetch(API, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -193,7 +209,17 @@ async function responder(texto) {
     bolha("in", renderResposta(r));
     etapa = 2;
   } else {
-    bolha("in", "Tô aqui pra ajudar com o que precisar do seu CAR 👍");
+    // etapa >= 2: mensagem livre — chama o backend com a mensagem real
+    const t2 = digitando();
+    const r = await consultar(CAR_DEMO, texto);
+    t2.remove();
+    if (r.agente === "professor" || r.delegado_por === "compadre") {
+      bastidoresProfessor(texto);
+      bolha("in", renderProfessor(r));
+    } else {
+      bastidores(CAR_DEMO, r);
+      bolha("in", renderResposta(r));
+    }
   }
 }
 
