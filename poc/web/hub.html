@@ -981,10 +981,46 @@
               </g>
             </svg>
 
+            {/* Mini tag popup — aparece sobre o mapa ao selecionar um imóvel */}
+            {sel && sel.tags && (
+              <div style={{
+                position: "absolute",
+                ...(sel.x > 650
+                  ? { right: `${(1 - sel.x / 1060) * 100}%`, marginRight: 18 }
+                  : { left: `${(sel.x / 1060) * 100}%`, marginLeft: 18 }),
+                ...(sel.y > 280
+                  ? { bottom: `${(1 - (sel.y / 530) * 0.87) * 100}%` }
+                  : { top: `${(sel.y / 530) * 87 + 5}%` }),
+                zIndex: 20, width: 224,
+                background: "rgba(4,12,20,.96)",
+                border: "1px solid rgba(1,180,100,.28)",
+                borderRadius: 8, padding: "10px 14px",
+                boxShadow: "0 4px 24px rgba(0,0,0,.5)",
+              }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+                  <span style={{ font: "var(--fw-bold) 10px var(--font-sans)", color: "rgba(80,210,150,.9)", letterSpacing: ".1em", textTransform: "uppercase" }}>
+                    Tags NFC · {sel.tags.length}
+                  </span>
+                  <button onClick={() => setSelectedProp(null)} style={{ border: "none", background: "none", color: "rgba(200,230,220,.45)", cursor: "pointer", padding: "0 0 0 8px", fontSize: 17, lineHeight: 1 }}>×</button>
+                </div>
+                <div style={{ font: "var(--fw-semibold) 12px var(--font-sans)", color: "rgba(200,235,220,.9)", marginBottom: 8 }}>{sel.name}</div>
+                {sel.tags.map(t => (
+                  <div key={t.id} style={{ padding: "6px 0", borderTop: "1px solid rgba(100,200,180,.08)" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 2 }}>
+                      <i data-lucide={t.tipo === "cartão" ? "credit-card" : "map-pin"} style={{ width: 11, height: 11, color: t.tipo === "cartão" ? "#4FC3A0" : "#A78BFA" }}></i>
+                      <code style={{ font: "10px var(--font-mono)", color: "rgba(80,200,150,.65)" }}>{t.id}</code>
+                    </div>
+                    <div style={{ font: "var(--fw-semibold) 12px var(--font-sans)", color: "rgba(220,240,232,.85)", marginBottom: 1 }}>{t.label}</div>
+                    <div style={{ font: "11px var(--font-sans)", color: "rgba(140,190,170,.6)" }}>{t.scan.dt} · {t.scan.por}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+
             {/* Stats bar */}
             <div style={{ display: "flex", gap: 28, padding: "14px 22px", borderTop: "1px solid rgba(100,200,180,.08)", background: "rgba(4,10,18,.92)" }}>
               {[
-                { v: totals.total, l: "IMÓVEIS", c: "var(--text-strong)" },
+                { v: totals.total, l: "IMÓVEIS", c: "rgba(240,255,250,.88)" },
                 { v: totals.conformes, l: "CONFORMES", c: "#016939" },
                 { v: totals.deficit, l: "COM DÉFICIT", c: "#FF6B6B" },
                 { v: totals.pendente, l: "PENDENTES", c: "#F5A623" },
@@ -995,7 +1031,7 @@
                 </div>
               ))}
               <div style={{ marginLeft: "auto" }}>
-                <div style={{ font: "var(--fw-bold) 20px/1 var(--font-mono)", color: "var(--text-strong)" }}>{totals.ha} ha</div>
+                <div style={{ font: "var(--fw-bold) 20px/1 var(--font-mono)", color: "rgba(240,255,250,.88)" }}>{totals.ha} ha</div>
                 <div style={{ font: "9.5px var(--font-sans)", color: "var(--text-faint)", letterSpacing: ".08em", marginTop: 3 }}>ÁREA TOTAL</div>
               </div>
             </div>
