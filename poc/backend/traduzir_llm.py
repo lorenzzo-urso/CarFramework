@@ -60,12 +60,19 @@ def _montar_prompt(dados, pendencias, beneficios, analise_app=None) -> str:
     }
     instrucao_app = ""
     if analise_app and not analise_app.get("conforme"):
+        deficit_ha = analise_app.get("deficit_ha", 0)
+        faixa = analise_app.get("faixa_exigida_m", 30)
+        fonte = analise_app.get("fonte", "Código Florestal")
         instrucao_app = (
-            "\n\nIMPORTANTE sobre a analise_app: essa é uma ESTIMATIVA calculada "
-            "com dados abertos (não é uma notificação oficial). Apresente como "
-            "observação — 'encontrei', 'calculei', 'pode estar' — nunca como "
-            "infração decretada. Sempre oriente a confirmar com técnico ou órgão "
-            "antes de tomar qualquer decisão."
+            f"\n\nREGRA OBRIGATÓRIA: os dados contêm analise_app com conforme=false. "
+            f"Você DEVE incluir na 'traducao' um parágrafo final sobre isso. "
+            f"Use linguagem de estimativa — 'encontrei', 'pode estar', 'calculei' — "
+            f"NUNCA como notificação oficial ou infração decretada. "
+            f"Exemplo de tom: 'Também fiz um cálculo com dados abertos da sua região: "
+            f"a área de mata perto do curso d\\'água pode estar com uns {deficit_ha:.2f} ha "
+            f"a menos do que a lei pede — a faixa exigida é {faixa} m ({fonte}). "
+            f"Isso é uma estimativa minha, não uma notificação oficial. "
+            f"Confirme com um técnico ou a EMATER antes de qualquer decisão.'"
         )
     return (
         "Você é o Compadre, um assistente que ajuda o produtor rural a entender "
@@ -74,8 +81,9 @@ def _montar_prompt(dados, pendencias, beneficios, analise_app=None) -> str:
         "ontologia do Código Florestal, são confiáveis)."
         + instrucao_app
         + f"\n\nDADOS:\n{json.dumps(contexto, ensure_ascii=False)}\n\n"
-        "Responda APENAS um JSON com duas chaves: 'traducao' (2-3 frases explicando "
-        "os avisos e o que fazer) e 'proximo_passo' (uma frase com a ação imediata)."
+        "Responda APENAS um JSON com duas chaves: 'traducao' (frases explicando "
+        "os avisos e o que fazer, incluindo OBRIGATORIAMENTE o parágrafo de "
+        "analise_app se presente) e 'proximo_passo' (uma frase com a ação imediata)."
     )
 
 
