@@ -1,0 +1,37 @@
+# Manifesto do agente Oportunidades — vitrine no Agent Hub (demonstrativo).
+# Busca beneficios, programas, financiamentos e incentivos ambientais
+# baseados no perfil e situacao do CAR do produtor ou cooperativa.
+# Nao executavel no PoC — prova que o protocolo suporta N agentes distintos.
+
+apiVersion: terracomum/v1
+kind: Agent
+
+metadata:
+  name: oportunidades
+  description: >
+    busca programas, financiamentos e incentivos ambientais elegíveis
+    com base no perfil do produtor e na situação do CAR
+  persona_alvo: produtor rural, cooperativa de crédito
+
+spec:
+  ontology:
+    source: car.ttl
+    concepts: [Beneficio, SituacaoCAR, Bioma, ReservaLegal, APP]
+
+  tools:
+    - buscar_programas        # busca Pronaf Eco, PSA, CRA, REDD+, etc.
+    - avaliar_elegibilidade   # cruza perfil (bioma, área, situação CAR) com critérios
+    - scoring                 # ranqueia oportunidades por impacto e facilidade de acesso
+
+  policy:
+    rules:
+      - usar apenas bases de dados abertos (Painel de Regularização, SNIF, RER)
+      - ranquear por facilidade de acesso e impacto financeiro para o produtor
+      - sinalizar pré-requisitos que o produtor ainda precisa cumprir no CAR
+      - nunca prometer valores sem citar a fonte e o período de vigência do programa
+
+  output: lista_oportunidades_ranqueadas
+
+  runtime:
+    protocol: ~
+    endpoint: ~

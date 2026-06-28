@@ -1,0 +1,38 @@
+# Manifesto do agente Comunicador — vitrine no Agent Hub (demonstrativo).
+# Usado pelo governo (OEMAs, MDA, prefeituras) para enviar campanhas,
+# lembretes e notificações personalizadas sobre o CAR em escala.
+# Nao executavel no PoC — prova que o protocolo suporta persona de governo.
+
+apiVersion: terracomum/v1
+kind: Agent
+
+metadata:
+  name: comunicador
+  description: >
+    envia campanhas, lembretes e notificações personalizadas sobre o CAR
+    para produtores, segmentados por situação e região
+  persona_alvo: governo (OEMAs, MDA, prefeituras, órgãos estaduais)
+
+spec:
+  ontology:
+    source: car.ttl
+    concepts: [Pendencia, SituacaoCAR, Bioma, APP, ReservaLegal]
+
+  tools:
+    - enviar_whatsapp      # mensagem direta via WhatsApp Business API
+    - enviar_push          # notificação push (app ou portal do produtor)
+    - campanhas_ativas     # lista e gerencia campanhas em andamento por região
+
+  policy:
+    rules:
+      - personalizar a mensagem com base na situação real do CAR do receptor
+      - usar linguagem simples — nunca jargão técnico em notificações ao produtor
+      - distinguir tom: urgente (prazo próximo) vs. informativo (novidade/programa)
+      - nunca simular notificação oficial de infração — apenas comunicação de serviço
+      - registrar envio para auditoria e evitar spam (limite de frequência por produtor)
+
+  output: relatorio_campanha
+
+  runtime:
+    protocol: ~
+    endpoint: ~
