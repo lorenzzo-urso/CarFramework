@@ -1145,8 +1145,11 @@ llm:
       const abrirAgente = (agent) => {
         setSelected(null);
         if (agent.name === "compadre" || agent.name === "professor") {
-          fireToast("Abrindo o " + agent.title + "…");
-          setTimeout(() => { window.location.href = "compadre.html"; }, 650);
+          const msg = agent.name === "professor"
+            ? "Professor responde via Compadre — pergunte sobre APP, Reserva Legal ou o Código Florestal."
+            : "Abrindo o Compadre…";
+          fireToast(msg);
+          setTimeout(() => { window.location.href = "compadre.html"; }, 1800);
         } else {
           fireToast("Abrindo o " + agent.title + "…");
         }
