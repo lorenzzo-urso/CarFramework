@@ -160,6 +160,8 @@
       protocolo: "Protocolo",
       governanca: "Governança",
       ecossistemas: "Ecossistemas",
+      documentacao: "Documentação",
+      dpg: "Bem Público Digital",
     };
 
     /* ---------- HubShell ---------- */
@@ -192,8 +194,8 @@
 
             <div style={{ marginTop: 18, font: "var(--fw-semibold) 10px var(--font-sans)", letterSpacing: ".12em", textTransform: "uppercase", color: "var(--text-faint)", padding: "0 6px 8px" }}>Aberto</div>
             <nav style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-              <NavItem icon="book-open" label="Documentação" onClick={() => {}} />
-              <NavItem icon="globe" label="Bem público (DPG)" onClick={() => {}} />
+              <NavItem icon="book-open" label="Documentação" active={nav === "documentacao"} onClick={() => onNav("documentacao")} />
+              <NavItem icon="globe" label="Bem público (DPG)" active={nav === "dpg"} onClick={() => onNav("dpg")} />
             </nav>
 
             <div style={{ marginTop: "auto", paddingTop: 16 }}>
@@ -795,6 +797,316 @@
     }
 
     /* =====================================================
+       DOCUMENTAÇÃO PAGE
+    ===================================================== */
+    function CodeBlock({ title, lang, children, badge }) {
+      const [copied, setCopied] = React.useState(false);
+      const copy = () => {
+        navigator.clipboard?.writeText(children.trim()).catch(() => {});
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1800);
+      };
+      return (
+        <div style={{ borderRadius: "var(--radius-md)", overflow: "hidden", border: "1px solid rgba(100,200,180,.15)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 14px", background: "rgba(6,15,26,.95)", borderBottom: "1px solid rgba(100,200,180,.10)" }}>
+            <div style={{ display: "flex", gap: 5 }}>
+              {["#FF6058","#FFBD2E","#28C840"].map(c => <span key={c} style={{ width: 9, height: 9, borderRadius: "50%", background: c, opacity: .7 }}></span>)}
+            </div>
+            {title && <span style={{ font: "var(--fw-semibold) 11px var(--font-mono)", color: "rgba(200,230,220,.6)", flex: 1 }}>{title}</span>}
+            {badge && <span style={{ font: "10px var(--font-mono)", color: "rgba(47,211,154,.6)", letterSpacing: ".08em" }}>{badge}</span>}
+            <button onClick={copy} style={{ border: "1px solid rgba(100,200,180,.2)", background: "rgba(47,211,154,.07)", color: copied ? "var(--accent)" : "rgba(200,230,220,.5)", borderRadius: "var(--radius-sm)", padding: "3px 9px", font: "10.5px var(--font-mono)", cursor: "pointer", transition: "color .2s" }}>
+              {copied ? "copiado ✓" : "copiar"}
+            </button>
+          </div>
+          <pre style={{ margin: 0, padding: "18px 20px", background: "#060F1A", font: "13px/1.7 var(--font-mono)", color: "rgba(210,240,230,.82)", overflowX: "auto", tabSize: 2 }}>
+            <code>{children.trim()}</code>
+          </pre>
+        </div>
+      );
+    }
+
+    function StepCard({ n, method, path, desc }) {
+      return (
+        <div style={{ display: "flex", gap: 16, background: "var(--surface-card)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-md)", padding: "16px 18px", alignItems: "flex-start" }}>
+          <div style={{ width: 32, height: 32, borderRadius: 9, background: "rgba(47,211,154,.10)", border: "1px solid rgba(47,211,154,.2)", display: "flex", alignItems: "center", justifyContent: "center", flex: "none" }}>
+            <span style={{ font: "var(--fw-bold) 13px var(--font-mono)", color: "var(--accent)" }}>{n}</span>
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+              <span style={{ font: "var(--fw-bold) 10px var(--font-mono)", color: method === "POST" ? "#F5A623" : "var(--accent)", background: method === "POST" ? "rgba(245,166,35,.1)" : "rgba(47,211,154,.1)", border: `1px solid ${method === "POST" ? "rgba(245,166,35,.2)" : "rgba(47,211,154,.2)"}`, borderRadius: "var(--radius-sm)", padding: "2px 7px" }}>{method}</span>
+              <code style={{ font: "13px var(--font-mono)", color: "var(--text-strong)" }}>{path}</code>
+            </div>
+            <p style={{ font: "13px/1.5 var(--font-sans)", color: "var(--text-muted)", margin: "6px 0 0" }}>{desc}</p>
+          </div>
+        </div>
+      );
+    }
+
+    function DocumentacaoPage() {
+      React.useEffect(() => { window.lucide && lucide.createIcons(); });
+
+      const yamlTemplate = `name: meu-agente
+description: "O que o agente faz em uma frase clara"
+version: "1.0.0"
+author: "Minha Organização"
+
+# Conceitos da ontologia que este agente usa como base de verdade
+ontology_concepts:
+  - car:AreaPreservacaoPermanente
+  - car:ReservaLegal
+
+# Ferramentas que o agente pode chamar
+tools:
+  - consultar_ontologia
+  - consultar_sicar
+
+# Configuração do modelo de linguagem
+llm:
+  provider: anthropic
+  model: claude-haiku-4-5
+  system_prompt: |
+    Você é um agente especializado em CAR.
+    Sempre cite a regra concreta da ontologia.
+    Nunca invente informações legais.`;
+
+      const jsonConversa = `// Request
+{
+  "numero_car": "MG-3102308-1F30612FD2F845A7B8852A7B0BF07455",
+  "mensagem": "o que preciso regularizar?"
+}
+
+// Response
+{
+  "resposta": "Seu imóvel tem uma pendência de mata ciliar...",
+  "regra_aplicada": "Lei 12.651/2012, Art. 4º, I, a",
+  "rastro_ontologia": "car:FaixaAPP_ate10",
+  "delegado_por": null
+}`;
+
+      const jsonAgentes = `// GET /agentes — Response (array)
+[
+  {
+    "name": "compadre",
+    "description": "Ajuda o produtor rural a entender o CAR.",
+    "tools": ["consultar_sicar", "consultar_ontologia", "traduzir_llm"],
+    "ontology_concepts": ["car:Pendencia_CIB", "car:FaixaAPP_ate10"],
+    "operacional": true
+  },
+  ...
+]`;
+
+      const jsonAnalise = `// GET /analise/demo — Response
+{
+  "faixa_exigida_m": 30,
+  "deficit_m2": 41900,
+  "deficit_ha": 4.19,
+  "conforme": false,
+  "fonte": "Lei 12.651/2012, Art. 4º, I, alínea a",
+  "rastro_ontologia": "car:FaixaAPP_ate10"
+}`;
+
+      const conceitos = [
+        { uri: "car:AreaPreservacaoPermanente", repr: "Área de Preservação Permanente", artigo: "Art. 3º, II", cat: "APP" },
+        { uri: "car:ReservaLegal", repr: "Reserva Legal mínima por bioma", artigo: "Art. 12", cat: "RL" },
+        { uri: "car:FaixaAPP_ate10", repr: "Faixa de APP ≤ 10m (cursos d'água)", artigo: "Art. 4º, I, a", cat: "APP" },
+        { uri: "car:Pendencia_CIB", repr: "Pendência de cadastro incompleto", artigo: "Art. 29, §1º", cat: "Pendência" },
+        { uri: "car:DeficitRL_municipio", repr: "Déficit de Reserva Legal por município", artigo: "Art. 12, §4º", cat: "RL" },
+        { uri: "car:Beneficio_PSA", repr: "Pagamento por Serviços Ambientais", artigo: "Art. 41", cat: "Benefício" },
+        { uri: "car:ElegibilidadeCredito", repr: "Elegibilidade a crédito verde", artigo: "Res. BCB 140/2021", cat: "Benefício" },
+        { uri: "car:Notificacao", repr: "Notificação de pendência ao produtor", artigo: "Art. 29, §3º", cat: "Pendência" },
+      ];
+
+      const catColor = { APP: "#2FD39A", RL: "#4FC3A0", Pendência: "#F5A623", Benefício: "#7DD4C4" };
+
+      return (
+        <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
+          {/* Hero */}
+          <div className="hero">
+            <div className="eyebrow">Referência técnica</div>
+            <h1>Como usar o <em>Hub</em></h1>
+            <p>API REST, manifestos de agentes e conceitos da ontologia — tudo que você precisa para integrar ou publicar um agente na plataforma.</p>
+          </div>
+
+          {/* Quick start */}
+          <div>
+            <div className="sec-head"><h2>Quick start — 3 endpoints</h2><span className="rule"></span><code style={{ font: "11px var(--font-mono)", color: "var(--text-faint)" }}>localhost:8000</code></div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
+              <StepCard n="1" method="POST" path="/conversa" desc="O produtor manda o número do CAR + mensagem; o Compadre responde com rastreabilidade." />
+              <StepCard n="2" method="GET"  path="/agentes"  desc="Lista todos os agentes registrados no Hub — nome, ferramentas, conceitos e status." />
+              <StepCard n="3" method="GET"  path="/analise/demo" desc="Análise de déficit de APP: cruza geometria real com a ontologia e devolve o resultado antes do envio." />
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              <CodeBlock title="POST /conversa" badge="Conversa" lang="json">{jsonConversa}</CodeBlock>
+              <CodeBlock title="GET /agentes" badge="Hub" lang="json">{jsonAgentes}</CodeBlock>
+              <CodeBlock title="GET /analise/demo" badge="Análise" lang="json">{jsonAnalise}</CodeBlock>
+            </div>
+          </div>
+
+          {/* Publicar agente */}
+          <div>
+            <div className="sec-head"><h2>Como publicar um agente</h2><span className="rule"></span><span style={{ font: "12px var(--font-sans)", color: "var(--text-faint)" }}>manifesto YAML</span></div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }}>
+              {[
+                { icon: "file-text", title: "Escreva o manifesto", desc: "Um arquivo YAML declara nome, ferramentas e os conceitos da ontologia que o agente usa." },
+                { icon: "git-fork", title: "Declare os conceitos", desc: "Referencie os URIs de car.ttl. O Hub garante que o agente raciocina sobre a mesma verdade." },
+                { icon: "upload", title: "Registre no Hub", desc: "Coloque o YAML em agents/ e reinicie o hub. O agente aparece na vitrine automaticamente." },
+                { icon: "shield-check", title: "Rastreabilidade grátis", desc: "Toda resposta herda o campo regra_aplicada — sem código extra no seu agente." },
+              ].map(s => (
+                <div key={s.title} style={{ display: "flex", gap: 12, background: "var(--surface-card)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-md)", padding: "14px 16px" }}>
+                  <i data-lucide={s.icon} style={{ width: 18, height: 18, color: "var(--accent)", flex: "none", marginTop: 2 }}></i>
+                  <div>
+                    <div style={{ font: "var(--fw-semibold) 13.5px var(--font-sans)", color: "var(--text-strong)", marginBottom: 4 }}>{s.title}</div>
+                    <div style={{ font: "12.5px var(--font-sans)", color: "var(--text-muted)" }}>{s.desc}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <CodeBlock title="agents/meu-agente.yaml" badge="template" lang="yaml">{yamlTemplate}</CodeBlock>
+          </div>
+
+          {/* Ontologia reference */}
+          <div>
+            <div className="sec-head"><h2>Referência da ontologia</h2><span className="count">{conceitos.length}</span><span className="rule"></span><code style={{ font: "11px var(--font-mono)", color: "var(--text-faint)" }}>car.ttl</code></div>
+            <div style={{ background: "var(--surface-card)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-md)", overflow: "hidden" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "2.2fr 2fr 1fr 0.7fr", padding: "9px 16px", borderBottom: "1px solid var(--border-hairline)", background: "var(--surface-inset)" }}>
+                {["URI", "Representa", "Artigo legal", "Tipo"].map(h => (
+                  <span key={h} style={{ font: "var(--fw-semibold) 10px var(--font-sans)", letterSpacing: ".1em", textTransform: "uppercase", color: "var(--text-faint)" }}>{h}</span>
+                ))}
+              </div>
+              {conceitos.map((c, i) => (
+                <div key={c.uri} style={{ display: "grid", gridTemplateColumns: "2.2fr 2fr 1fr 0.7fr", padding: "11px 16px", borderBottom: i < conceitos.length - 1 ? "1px solid var(--border-hairline)" : "none", alignItems: "center" }}>
+                  <code style={{ font: "11.5px var(--font-mono)", color: "var(--mint-400)" }}>{c.uri}</code>
+                  <span style={{ font: "13px var(--font-sans)", color: "var(--text-body)" }}>{c.repr}</span>
+                  <span style={{ font: "11.5px var(--font-mono)", color: "var(--text-faint)" }}>{c.artigo}</span>
+                  <span style={{ font: "10px var(--font-mono)", color: catColor[c.cat], background: `${catColor[c.cat]}18`, border: `1px solid ${catColor[c.cat]}33`, borderRadius: "var(--radius-pill)", padding: "2px 7px", width: "fit-content" }}>{c.cat}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Docs footer note */}
+          <div style={{ background: "var(--surface-inset)", border: "1px solid var(--border-hairline)", borderRadius: "var(--radius-md)", padding: "14px 18px", display: "flex", alignItems: "center", gap: 10 }}>
+            <i data-lucide="info" style={{ width: 16, height: 16, color: "var(--text-faint)", flex: "none" }}></i>
+            <span style={{ font: "12.5px var(--font-sans)", color: "var(--text-muted)" }}>
+              Documentação interativa completa disponível em <code style={{ font: "12px var(--font-mono)", color: "var(--mint-400)" }}>localhost:8000/docs</code> — Swagger UI com todos os schemas e exemplos executáveis.
+            </span>
+          </div>
+        </div>
+      );
+    }
+
+    /* =====================================================
+       BEM PÚBLICO DIGITAL (DPG) PAGE
+    ===================================================== */
+    function DpgPage() {
+      React.useEffect(() => { window.lucide && lucide.createIcons(); });
+
+      const criterios = [
+        { ok: true,  icon: "code-2",      title: "Código aberto",         desc: "Repositório público, licença Apache 2.0. Qualquer pessoa inspeciona, bifurca e contribui." },
+        { ok: true,  icon: "database",    title: "Dados abertos",          desc: "Apenas bases públicas com licença CC: SIGEF, MapBiomas, SICAR, SFB. Zero dado pessoal identificável." },
+        { ok: true,  icon: "server",      title: "Auto-hospedável",        desc: "Instância própria via Docker sobre o RER do governo. Qualquer estado ou país sobe o seu." },
+        { ok: true,  icon: "shield",      title: "Não causa dano",         desc: "Nenhum dado de produtor armazenado. Respostas rastreáveis: vem da lei, nunca inventadas pelo LLM." },
+        { ok: true,  icon: "globe-2",     title: "Contribui para os ODS",  desc: "ODS 15 (vida terrestre), ODS 13 (clima), ODS 2 (fome zero), ODS 17 (parcerias)." },
+        { ok: true,  icon: "repeat-2",   title: "Reutilizável",           desc: "A ontologia cobre o Código Florestal brasileiro; outro país escreve a sua e usa o mesmo Hub." },
+      ];
+
+      const ods = [
+        { num: "15", cor: "#5C913B", titulo: "Vida Terrestre", desc: "APP, Reserva Legal e mata ciliar preservados via regularização do CAR." },
+        { num: "13", cor: "#3F7E44", titulo: "Ação Climática", desc: "Vegetação nativa mantida = carbono sequestrado. CAR regular = base para PSA e REDD+." },
+        { num: "02", cor: "#DDA63A", titulo: "Fome Zero",      desc: "CAR regularizado desbloqueia Pronaf Eco e crédito rural verde para pequenos produtores." },
+        { num: "17", cor: "#19486A", titulo: "Parcerias",       desc: "Plataforma aberta: governo, cooperativas e pesquisa constroem juntos sobre a mesma camada." },
+      ];
+
+      const fundacoes = [
+        { nome: "RER — Serviço Florestal Brasileiro", tipo: "DPG oficial", desc: "Sistema de Registro Ambiental Rural do governo federal, open-source. A plataforma roda sobre ele.", icone: "database" },
+        { nome: "AGROVOC (FAO)", tipo: "Vocabulário internacional", desc: "Vocabulário agrícola da ONU. A ontologia car.ttl é projetada para alinhar com ele.", icone: "book-open" },
+        { nome: "Embrapa — OntoAgroHidro", tipo: "Referência nacional", desc: "Ativo semântico da Embrapa alinhado com o domínio agro-ambiental brasileiro.", icone: "leaf" },
+        { nome: "Lei 12.651/2012 (CC0)", tipo: "Fonte primária", desc: "Código Florestal: domínio público, integrado à ontologia como verdade verificável.", icone: "scroll" },
+      ];
+
+      return (
+        <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
+          {/* Hero manifesto */}
+          <div style={{ position: "relative", overflow: "hidden", border: "1px solid rgba(47,211,154,.2)", borderRadius: "var(--radius-lg)", background: "linear-gradient(135deg, rgba(1,80,45,.35), rgba(4,20,14,.8))", padding: "36px 36px 32px" }}>
+            <div style={{ position: "absolute", right: -20, top: -20, width: 240, height: 240, background: "url('ds/assets/leaf-mark-cut.png') no-repeat center/contain", opacity: .04 }}></div>
+            <div className="eyebrow">Manifesto · Bem Público Digital</div>
+            <h1 style={{ font: "var(--fw-bold) 38px/1.05 var(--font-display)", color: "var(--text-strong)", letterSpacing: "-.03em", margin: "10px 0 0" }}>
+              Não construímos<br />um <span style={{ color: "var(--accent)" }}>táxi.</span>
+            </h1>
+            <p style={{ font: "17px/1.6 var(--font-sans)", color: "var(--text-muted)", margin: "14px 0 0", maxWidth: 580 }}>
+              Construímos a estrada. Uma infraestrutura semântica aberta que qualquer governo, cooperativa ou pesquisador pode usar, adaptar e melhorar — sem pedir permissão.
+            </p>
+          </div>
+
+          {/* DPG criteria checklist */}
+          <div>
+            <div className="sec-head"><h2>Critérios de alinhamento DPG</h2><span className="count">{criterios.filter(c=>c.ok).length}/{criterios.length}</span><span className="rule"></span><span style={{ font: "12px var(--font-sans)", color: "var(--accent)" }}>todos atendidos</span></div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+              {criterios.map(c => (
+                <div key={c.title} style={{ display: "flex", gap: 13, background: "var(--surface-card)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-md)", padding: "15px 16px" }}>
+                  <div style={{ width: 34, height: 34, borderRadius: 10, background: c.ok ? "rgba(47,211,154,.12)" : "rgba(255,100,100,.1)", display: "flex", alignItems: "center", justifyContent: "center", flex: "none" }}>
+                    <i data-lucide={c.icon} style={{ width: 17, height: 17, color: c.ok ? "var(--accent)" : "#FF6B6B" }}></i>
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 4 }}>
+                      <span style={{ font: "var(--fw-semibold) 13.5px var(--font-sans)", color: "var(--text-strong)" }}>{c.title}</span>
+                      <i data-lucide={c.ok ? "check-circle-2" : "x-circle"} style={{ width: 14, height: 14, color: c.ok ? "var(--accent)" : "#FF6B6B" }}></i>
+                    </div>
+                    <p style={{ font: "12.5px/1.5 var(--font-sans)", color: "var(--text-muted)", margin: 0 }}>{c.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ODS cards */}
+          <div>
+            <div className="sec-head"><h2>Objetivos de Desenvolvimento Sustentável</h2><span className="rule"></span><span style={{ font: "12px var(--font-sans)", color: "var(--text-faint)" }}>ONU · Agenda 2030</span></div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 10 }}>
+              {ods.map(o => (
+                <div key={o.num} style={{ borderRadius: "var(--radius-md)", border: `1px solid ${o.cor}44`, background: `${o.cor}14`, padding: "18px 16px" }}>
+                  <div style={{ font: "var(--fw-bold) 32px/1 var(--font-mono)", color: o.cor, marginBottom: 8 }}>{o.num}</div>
+                  <div style={{ font: "var(--fw-bold) 13px var(--font-display)", color: "var(--text-strong)", marginBottom: 6 }}>{o.titulo}</div>
+                  <p style={{ font: "12px/1.5 var(--font-sans)", color: "var(--text-muted)", margin: 0 }}>{o.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Built-on foundations */}
+          <div>
+            <div className="sec-head"><h2>Construído sobre</h2><span className="rule"></span><span style={{ font: "12px var(--font-sans)", color: "var(--text-faint)" }}>infraestrutura pública existente</span></div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {fundacoes.map(f => (
+                <div key={f.nome} style={{ display: "flex", alignItems: "center", gap: 16, background: "var(--surface-card)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-md)", padding: "14px 18px" }}>
+                  <div style={{ width: 38, height: 38, borderRadius: 10, background: "rgba(47,211,154,.08)", border: "1px solid rgba(47,211,154,.15)", display: "flex", alignItems: "center", justifyContent: "center", flex: "none" }}>
+                    <i data-lucide={f.icone} style={{ width: 18, height: 18, color: "var(--accent)" }}></i>
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ font: "var(--fw-semibold) 14px var(--font-sans)", color: "var(--text-strong)" }}>{f.nome}</div>
+                    <div style={{ font: "12.5px var(--font-sans)", color: "var(--text-muted)", marginTop: 2 }}>{f.desc}</div>
+                  </div>
+                  <span style={{ font: "var(--fw-semibold) 10px var(--font-sans)", letterSpacing: ".08em", textTransform: "uppercase", color: "var(--text-faint)", background: "var(--surface-inset)", border: "1px solid var(--border-hairline)", borderRadius: "var(--radius-pill)", padding: "3px 9px", whiteSpace: "nowrap" }}>{f.tipo}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Reuse banner */}
+          <div style={{ display: "flex", gap: 20, background: "linear-gradient(90deg, rgba(1,105,59,.18), transparent)", border: "1px solid rgba(47,211,154,.18)", borderLeft: "3px solid var(--accent)", borderRadius: "var(--radius-md)", padding: "20px 24px", alignItems: "center" }}>
+            <i data-lucide="globe-2" style={{ width: 28, height: 28, color: "var(--accent)", flex: "none" }}></i>
+            <div>
+              <div style={{ font: "var(--fw-bold) 15px var(--font-display)", color: "var(--text-strong)", marginBottom: 4 }}>Além do Brasil</div>
+              <p style={{ font: "13.5px/1.5 var(--font-sans)", color: "var(--text-muted)", margin: 0 }}>
+                A ontologia cobre o Código Florestal brasileiro. Outro país escreve a sua ontologia florestal e usa o mesmo Agent Hub por cima — sem mudar uma linha do núcleo. É o mesmo princípio do Android: o sistema é aberto, os apps mudam.
+              </p>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    /* =====================================================
        HUB ROOT
     ===================================================== */
     function Hub() {
@@ -871,6 +1183,12 @@
 
           {/* ECOSSISTEMAS */}
           {nav === "ecossistemas" && <EcossistemasPage />}
+
+          {/* DOCUMENTAÇÃO */}
+          {nav === "documentacao" && <DocumentacaoPage />}
+
+          {/* BEM PÚBLICO DIGITAL */}
+          {nav === "dpg" && <DpgPage />}
 
           <div className={"toast" + (toast ? " show" : "")}>
             <i data-lucide="leaf" style={{ color: "var(--accent)" }}></i>
