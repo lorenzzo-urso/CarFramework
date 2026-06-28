@@ -2,110 +2,114 @@
 
 **Solução:** Car Framework (Compadre + Agent Hub)
 **Formato:** Telas navegáveis (compadre.html + hub.html) com narração em áudio
-**Limite:** ≤ 120s · Meta de segurança: **110s**
-**Duração estimada deste roteiro: 110s**
+**Limite:** ≤ 120s · Meta de segurança: **107s**
+
+> **Princípio deste roteiro:** mostrar primeiro o resultado (Compadre/Raimundo),
+> depois abrir o capô e explicar **como funciona** — ontologia, fontes abertas,
+> protocolo de agentes. Os jurados avaliam inovação pelo mecanismo, não só pela interface.
 
 ---
 
-## Roteiro completo — bloco a bloco
+## Roteiro completo
 
 ---
 
-### [0:00 – 0:12] GANCHO · 12s
+### [0:00 – 0:08] GANCHO · 8s
 
-**Tela:** Print/foto de uma notificação técnica do órgão ambiental
-_(pode ser a notificação real de um dos produtores entrevistados, com dados pessoais cobertos)_
+**Tela:** Print de notificação técnica do órgão ambiental (dados pessoais cobertos)
 
 **Narração:**
-> "Cinco produtores reais. Cinco WhatsApps. Todos com CAR registrado.
-> Nenhum entende a notificação que recebeu do governo."
-
-**Nota de produção:** fundo escuro, texto da notificação em destaque — a linguagem impenetrável é o gancho visual.
+> "8,2 milhões de imóveis no CAR.
+> E nenhum sistema sabe dizer ao produtor, em português, o que está errado no dele."
 
 ---
 
-### [0:12 – 0:22] PROBLEMA · 10s
+### [0:08 – 0:15] PROBLEMA · 7s
 
-**Tela:** Animação simples ou imagem — papel na gaveta, ligação pro técnico
+**Tela:** Imagem simples — notificação incompreensível, gaveta, telefone
 
 **Narração:**
-> "A linguagem técnica paralisa. O crédito rural fica bloqueado.
-> Contratar um técnico custa. E o ciclo de correções pode durar meses."
+> "A linguagem técnica paralisa. O crédito fica bloqueado.
+> O ciclo de correções pode durar meses."
 
 ---
 
-### [0:22 – 1:17] ATO 1 — O QUE O RAIMUNDO VÊ · 55s
+### [0:15 – 0:40] O QUE O RAIMUNDO VÊ · 25s
 
-> _Mostrar: compadre.html — interface do chat_
+> _Mostrar: compadre.html_
 
-**[0:22 – 0:28] · 6s — Raimundo abre o WhatsApp**
-Tela: Chat abre, Raimundo digita "oi" e envia
+**[0:15 – 0:21] · 6s — Raimundo manda "oi"**
+Tela: Chat abre, digita "oi", envia
 > "O Seu Raimundo manda um 'oi' pro Compadre, pelo WhatsApp."
 
 ---
 
-**[0:28 – 0:43] · 15s — Compadre traduz a pendência**
-Tela: Resposta do Compadre — linguagem simples, sem jargão
-> "O Compadre já buscou a situação do imóvel. Em linguagem simples:
-> tem uma diferença na área de mata ciliar perto do rio.
-> Não é o sistema inventando — é ele traduzindo o que a lei diz."
+**[0:21 – 0:33] · 12s — Resposta traduzida + rastreabilidade**
+Tela: Resposta em linguagem simples + TraceSeal `📖 Lei 12.651/2012, Art. 4º, I, a`
+> "O Compadre traduz a pendência em linguagem simples.
+> E mostra a regra exata por trás — rastreável, verificável.
+> Não é o modelo inventando. É a lei."
 
 ---
 
-**[0:43 – 0:54] · 11s — Selo de rastreabilidade**
-Tela: TraceSeal — `📖 Lei 12.651/2012, Art. 4º, I, a · car:FaixaAPP_ate10`
-> "E mostra a regra exata que fundamenta a resposta.
-> Rastreável. A mesma que o analista usa para validar."
+**[0:33 – 0:40] · 7s — Déficit descoberto antes do envio**
+Tela: 4,19 ha de déficit de mata ciliar calculado
+> "Antes de enviar: 4,19 hectares de déficit detectados com dado aberto.
+> O produtor descobriu o problema antes da fiscalização."
 
 ---
 
-**[0:54 – 1:10] · 16s — Descoberta antecipada do déficit**
-Tela: Compadre exibe 4,19 ha de mata ciliar calculado antes do envio
-> "Antes de enviar qualquer coisa,
-> o sistema já calculou o déficit de mata ciliar com dado aberto.
-> Descobriu o problema que o produtor nem sabia que tinha."
+### [0:40 – 1:35] COMO FUNCIONA · 55s
+
+> _Mostrar: hub.html — páginas Protocolo, Agentes, Ecossistemas_
 
 ---
 
-**[1:10 – 1:17] · 7s — O que o CAR regularizado destrava**
-Tela: Compadre mostra Pronaf Eco, PSA, suspensão de sanções
-> "E mostra o que o CAR em dia desbloqueia: Pronaf Eco, benefícios ambientais."
+**[0:40 – 0:55] · 15s — A ontologia: a fonte de verdade**
+Tela: Hub → página **Protocolo** → conceitos da ontologia (`car:FaixaAPP_ate10`, `car:ReservaLegal`)
+> "A resposta não saiu do LLM.
+> Saiu daqui — uma ontologia do Código Florestal.
+> Cada regra é um nó no grafo. Quando a lei muda, muda um nó.
+> Todos os agentes ficam corretos automaticamente."
 
 ---
 
-### [1:17 – 1:50] ATO 2 — O QUE ESTÁ POR TRÁS · 33s
-
-> _Mostrar: hub.html — Agent Hub_
-
-**[1:17 – 1:24] · 7s — Transição**
-Tela: Fade do chat para o Hub
-> "Por trás dessa conversa simples — um protocolo aberto."
+**[0:55 – 1:07] · 12s — As fontes abertas**
+Tela: Protocolo → seção "Origens dos dados" (SIGEF, MapBiomas, RER, SICAR, Lei 12.651)
+> "As fontes são todas públicas: SIGEF, MapBiomas, o RER do governo federal.
+> Nenhum dado inventado. Nenhuma API proprietária.
+> Os mesmos dados que o analista usa para validar."
 
 ---
 
-**[1:24 – 1:40] · 16s — Os 7 agentes**
-Tela: Hub com os 7 cards — câmera passa por eles
-> "Sete agentes. Todos raciocinam sobre a mesma base de conhecimento.
-> O Compadre serve o Raimundo.
+**[1:07 – 1:22] · 15s — O protocolo de agentes**
+Tela: Hub → página **Agentes** → 7 cards — câmera passa por eles
+> "O Car Framework é um protocolo de agentes.
+> Cada agente é um manifesto YAML sobre a mesma camada de conhecimento.
+> O Compadre serve o produtor.
 > O Auditor serve o analista do OEMA.
 > O Crédito serve a cooperativa.
-> Um protocolo. Múltiplas personas."
+> Um protocolo. Múltiplas personas. Zero retrabalho."
 
 ---
 
-**[1:40 – 1:50] · 10s — Mapa territorial**
-Tela: Página Ecossistemas — mapa com imóveis, zonas, nós coloridos
-> "O território em escala: imóveis conformes, déficits detectados,
-> áreas de APP mapeadas com dado aberto."
+**[1:22 – 1:35] · 13s — O território em escala**
+Tela: Hub → página **Ecossistemas** — mapa com imóveis, zonas, nós coloridos
+> "E em escala: imóveis conformes, déficits detectados, áreas de APP mapeadas —
+> tudo sobre dado aberto, antes mesmo de qualquer fiscalização."
 
 ---
 
-### [1:50 – 2:00] ENCERRAMENTO · 10s
+### [1:35 – 1:47] ENCERRAMENTO · 12s
 
-Tela: Logo / nome da solução sobre o Hub
+**Tela:** Logo / Hub com o nome da solução
+
+**Narração:**
 > "Car Framework.
-> O Compadre é o primeiro agente.
-> A plataforma é aberta. A estrada é de todos."
+> O território já tinha fronteiras.
+> Faltava a linguagem para lê-las.
+> A plataforma é aberta. Qualquer agente pode ser publicado.
+> A estrada é de todos."
 
 ---
 
@@ -113,46 +117,61 @@ Tela: Logo / nome da solução sobre o Hub
 
 | Bloco | Duração |
 |---|---|
-| Gancho | 12s |
-| Problema | 10s |
-| Ato 1 — Compadre | 55s |
-| Ato 2 — Hub | 33s |
-| Encerramento | 10s |
-| **Total** | **110s** |
+| Gancho | 8s |
+| Problema | 7s |
+| Compadre (resultado) | 25s |
+| **Como funciona** | **55s** |
+| Encerramento | 12s |
+| **Total** | **107s** |
 
-Margem de segurança: **10 segundos** antes do limite de 120s.
+Margem de segurança: **13 segundos** antes do limite de 120s.
 
 ---
 
-## Lista de produção — o que precisa existir antes de gravar
+## Por que essa estrutura
+
+O vídeo responde às quatro perguntas dos jurados, nessa ordem:
+
+| Pergunta do jurado | Bloco que responde |
+|---|---|
+| "Qual é o problema?" | Gancho + Problema |
+| "O que o produtor vê?" | Compadre |
+| "Como funciona de verdade?" | Protocolo + Fontes + Agentes |
+| "Qual é a escala possível?" | Ecossistemas + Encerramento |
+
+A seção **Como funciona** é o que diferencia de qualquer chatbot genérico —
+é onde a inovação se torna visível para os jurados.
+
+---
+
+## Lista de produção — checklist
 
 ### Telas a capturar (screencast)
 - [ ] `compadre.html` — chat abrindo, Raimundo digitando "oi"
-- [ ] `compadre.html` — resposta do Compadre com linguagem simples
-- [ ] `compadre.html` — TraceSeal da regra (`Lei 12.651/2012, Art. 4º, I, a`)
-- [ ] `compadre.html` — déficit de 4,19 ha calculado
-- [ ] `compadre.html` — benefícios desbloqueados (Pronaf Eco)
-- [ ] Transição: fade do chat para o Hub
-- [ ] `hub.html` — página Agentes, câmera passando pelos 7 cards
-- [ ] `hub.html` — página Ecossistemas, mapa com nós
+- [ ] `compadre.html` — resposta + TraceSeal (`Lei 12.651/2012, Art. 4º, I, a`)
+- [ ] `compadre.html` — 4,19 ha de déficit calculado
+- [ ] `hub.html` → **Protocolo** — conceitos da ontologia (`car:FaixaAPP_ate10`, etc.)
+- [ ] `hub.html` → **Protocolo** — seção "Origens dos dados" (5 fontes abertas)
+- [ ] `hub.html` → **Agentes** — câmera passando pelos 7 cards
+- [ ] `hub.html` → **Ecossistemas** — mapa com nós e zonas
 
 ### Assets visuais
-- [ ] Imagem/print de notificação técnica (dados pessoais cobertos) para o gancho
-- [ ] Imagem simples do problema (papel na gaveta, telefone) — pode ser estática por 10s
+- [ ] Print de notificação técnica real (dados pessoais cobertos) para o gancho
+- [ ] Imagem estática simples para o bloco Problema (10s)
 
 ### Áudio
 - [ ] Narração gravada — voz calma, ritmo firme (~130 palavras/min)
-- [ ] Música de fundo opcional: ambiente suave, não competindo com a narração
+- [ ] Música de fundo opcional: suave, não competindo com a narração
 
 ---
 
 ## Dicas de corte se passar do tempo
 
-Se na edição o vídeo passar de 115s, cortar nesta ordem:
+Se passar de 115s, cortar nesta ordem:
 
-1. **Encerramento** — reduzir de 10s para 7s (cortar "A estrada é de todos")
-2. **Ecossistemas** — reduzir de 10s para 6s (câmera mais rápida no mapa)
-3. **Benefícios** — reduzir de 7s para 4s (só mostrar a tela, narração mais curta)
+1. **Ecossistemas** — reduzir de 13s para 8s (câmera mais rápida)
+2. **Encerramento** — cortar "A estrada é de todos" (−3s)
+3. **Fontes abertas** — listar só 3 fontes em vez de 5 (−4s)
 
 ---
 
