@@ -20,6 +20,39 @@ from professor_llm import perguntar as perguntar_professor
 
 AGENTS_DIR = Path(__file__).parent / "agents"
 
+# Termos que indicam consulta sobre o CAR pessoal do usuário
+_TERMOS_CONSULTA = {
+    "meu car", "meu imóvel", "meu imovel", "minha propriedade",
+    "meu cadastro", "minha pendência", "minha pendencia",
+    "minha situação", "minha situacao", "meu número", "meu numero",
+    "oi", "olá", "ola", "bom dia", "boa tarde", "boa noite",
+    "meu registro", "minha área", "minha area",
+}
+
+# Termos que indicam dúvida conceitual — delega ao Professor
+_TERMOS_PERGUNTA = {
+    "o que é", "o que e", "o que são", "o que sao",
+    "o que significa", "como funciona", "me explica", "explica",
+    "quero entender", "não entendo", "nao entendo",
+    "o que quer dizer", "qual a lei", "qual o artigo",
+    "qual a faixa", "qual o percentual", "qual o prazo",
+    "para que serve", "como calcular", "como é calculado",
+    "o que preciso saber", "qual a diferença", "me diz",
+}
+
+
+def _e_pergunta_conceitual(mensagem: str) -> bool:
+    """Retorna True se a mensagem parece dúvida conceitual → delegar ao Professor."""
+    m = mensagem.lower().strip()
+    if any(t in m for t in _TERMOS_CONSULTA):
+        return False
+    if any(t in m for t in _TERMOS_PERGUNTA):
+        return True
+    # qualquer mensagem curta terminando em "?" sem referência pessoal → Professor
+    if m.endswith("?") and len(m) < 120:
+        return True
+    return False
+
 
 class AgentHub:
     """Carrega manifestos de agente e resolve suas tools por nome."""
@@ -84,8 +117,16 @@ class AgentHub:
         return {"resposta": resposta, "agente": "professor"}
 
     def _pipeline_compadre(self, numero_car: str, mensagem: str) -> dict:
-        """Orquestração do Compadre: SICAR -> ontologia -> LLM. Cada passo usa
-        uma tool declarada no manifesto."""
+        """Orquestração do Compadre: SICAR -> ontologia -> LLM.
+
+        Se a mensagem for uma dúvida conceitual, delega silenciosamente ao
+        Professor — o usuário recebe a resposta sem precisar trocar de agente.
+        """
+        if _e_pergunta_conceitual(mensagem):
+            resultado = self._pipeline_professor(mensagem)
+            resultado["delegado_por"] = "compadre"
+            return resultado
+
         sicar = self.registry["consultar_sicar"]
         onto = self.registry["consultar_ontologia"]
 
