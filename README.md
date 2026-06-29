@@ -15,8 +15,6 @@ do território rural brasileiro — construído sobre o RER open-source do gover
 
 ---
 
----
-
 ## O problema
 
 > *"Você consegue dizer onde começa a Reserva Legal da sua propriedade?"*
@@ -32,10 +30,6 @@ rural não consegue usar. **O problema não é falta de informação — é falt
 
 ## A transformação
 
-<p align="center">
-  <img src="docs/assets/screenshot-compadre.png" alt="Mestre da Terra — conversa no WhatsApp" width="360" />
-</p>
-
 **Antes:** Seu Raimundo recebe uma notificação — *"sobreposição de polígono em área de APP,
 necessária retificação cadastral"*. Não entende uma palavra. Guarda na gaveta.
 O crédito rural fica bloqueado.
@@ -44,6 +38,11 @@ O crédito rural fica bloqueado.
 *"Acharam uma diferença na área perto do seu rio. É isso aqui, ó. Pra resolver,
 é só confirmar esse limite no mapa — eu já deixei quase pronto."*
 Em minutos, entendeu, corrigiu — e descobriu que o CAR em dia libera o Pronaf Eco.
+
+<p align="center">
+  <img src="docs/demos/inicio-chat.gif" alt="Compadre — Mestre da Terra analisa o CAR" width="600" />
+  <br/><sub>Compadre ao vivo — pendências traduzidas, ontologia rastreável, benefícios desbloqueados</sub>
+</p>
 
 ---
 
@@ -57,6 +56,11 @@ A solução tem duas faces que trabalham juntas:
 | **Terra Comum** | O motor que ninguém vê — ontologia do Código Florestal + grafo de conhecimento + Agent Hub, sobre o RER open-source. É o que garante que a resposta seja rastreável, não inventada. |
 
 Princípio: **esconde a máquina pesada. Ensina só o essencial.**
+
+<p align="center">
+  <img src="docs/demos/perguntas-chat.gif" alt="Professor — explica o Código Florestal em linguagem simples" width="600" />
+  <br/><sub>Professor — quando o produtor pergunta, o hub delega para o agente certo</sub>
+</p>
 
 ---
 
@@ -93,35 +97,6 @@ FONTES ABERTAS
 
 A ontologia é o contrato. Quando a lei muda, você muda um nó — todos os agentes
 ficam corretos automaticamente. Nenhum chatbot existente faz isso.
-
----
-
-## Screenshots
-
-<p align="center">
-  <img src="docs/demos/inicio-chat.gif" alt="Compadre — início da conversa" width="600" />
-  <br/><sub>Início — Compadre analisa o CAR e explica as pendências</sub>
-</p>
-
-<p align="center">
-  <img src="docs/demos/perguntas-chat.gif" alt="Compadre — perguntas ao Professor" width="600" />
-  <br/><sub>Professor — responde perguntas sobre o Código Florestal em linguagem simples</sub>
-</p>
-
-<p align="center">
-  <img src="docs/assets/screenshot-hub-agentes.png" alt="Agent Hub — Agentes" width="100%" />
-  <br/><sub>Agent Hub — catálogo de agentes especializados</sub>
-</p>
-
-<p align="center">
-  <img src="docs/assets/screenshot-hub-territorios.png" alt="Hub — mapa territorial" width="100%" />
-  <br/><sub>Territórios — visualização CAR de 8 imóveis com status em tempo real</sub>
-</p>
-
-<p align="center">
-  <img src="docs/assets/screenshot-hub-protocolo.png" alt="Hub — Protocolo" width="100%" />
-  <br/><sub>Protocolo — arquitetura em camadas e fontes de dados abertas</sub>
-</p>
 
 ---
 
@@ -166,6 +141,21 @@ Com `uvicorn` rodando, tudo acima **mais**:
 | `credito` | Cooperativas e bancos — carteira elegível, crédito verde |
 | `oportunidades` | PSA, CRA, Pronaf Eco — descobre o que o CAR regular libera |
 | `comunicador` | OEMAs e prefeituras — notificações em linguagem humana |
+
+<p align="center">
+  <img src="docs/assets/screenshot-hub-agentes.png" alt="Agent Hub — Agentes" width="100%" />
+  <br/><sub>Agent Hub — catálogo de agentes especializados</sub>
+</p>
+
+<p align="center">
+  <img src="docs/assets/screenshot-hub-territorios.png" alt="Hub — mapa territorial" width="100%" />
+  <br/><sub>Territórios — visualização CAR de 8 imóveis com status em tempo real</sub>
+</p>
+
+<p align="center">
+  <img src="docs/assets/screenshot-hub-protocolo.png" alt="Hub — Protocolo" width="100%" />
+  <br/><sub>Protocolo — arquitetura em camadas e fontes de dados abertas</sub>
+</p>
 
 ---
 
