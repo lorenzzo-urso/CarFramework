@@ -198,19 +198,6 @@ As fontes de dados viram os sentidos.
 
 ---
 
-## Números
-
-| | |
-|---|---|
-| Imóveis no CAR | 8,2 milhões |
-| Área mapeável | 7 milhões de km² |
-| Crédito rural (Pronaf) | R$ 15 bi/ano |
-| CARs com erros estimados | 30–40% |
-| Custo de um novo agente | 1 manifesto YAML |
-| Dados necessários | já públicos e abertos |
-
----
-
 ## Como rodar localmente
 
 ```bash
