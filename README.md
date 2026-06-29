@@ -1,11 +1,19 @@
-# CarFramework — Terra Comum / Compadre
+<p align="center">
+  <img src="docs/assets/header-hacarthon.png" alt="haCARthon" width="100%" />
+</p>
 
-> **O território já tinha fronteiras. Faltava a linguagem para lê-las.**
+<p align="center">
+  <img src="docs/assets/logo-horizontal.svg" alt="CARframework" height="72" />
+</p>
+
+<p align="center"><em>O território já tinha fronteiras. Faltava a linguagem para lê-las.</em></p>
 
 Protocolo aberto de agentes especializados sobre um grafo de conhecimento compartilhado
 do território rural brasileiro — construído sobre o RER open-source do governo federal.
 
 **Demo online →** [lorenzzo-urso.github.io/CarFramework/hub.html](https://lorenzzo-urso.github.io/CarFramework/hub.html)
+
+---
 
 ---
 
@@ -23,6 +31,10 @@ rural não consegue usar. **O problema não é falta de informação — é falt
 ---
 
 ## A transformação
+
+<p align="center">
+  <img src="docs/assets/screenshot-compadre.png" alt="Mestre da Terra — conversa no WhatsApp" width="360" />
+</p>
 
 **Antes:** Seu Raimundo recebe uma notificação — *"sobreposição de polígono em área de APP,
 necessária retificação cadastral"*. Não entende uma palavra. Guarda na gaveta.
@@ -81,6 +93,25 @@ FONTES ABERTAS
 
 A ontologia é o contrato. Quando a lei muda, você muda um nó — todos os agentes
 ficam corretos automaticamente. Nenhum chatbot existente faz isso.
+
+---
+
+## Screenshots
+
+<p align="center">
+  <img src="docs/assets/screenshot-hub-agentes.png" alt="Agent Hub — Agentes" width="100%" />
+  <br/><sub>Agent Hub — catálogo de agentes especializados</sub>
+</p>
+
+<p align="center">
+  <img src="docs/assets/screenshot-hub-territorios.png" alt="Hub — mapa territorial" width="100%" />
+  <br/><sub>Territórios — visualização CAR de 8 imóveis com status em tempo real</sub>
+</p>
+
+<p align="center">
+  <img src="docs/assets/screenshot-hub-protocolo.png" alt="Hub — Protocolo" width="100%" />
+  <br/><sub>Protocolo — arquitetura em camadas e fontes de dados abertas</sub>
+</p>
 
 ---
 

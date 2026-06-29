@@ -60,10 +60,10 @@ async function bastidores(numero, r) {
 
 // resposta de reserva (mesmo shape de contracts/conversa.example.json)
 const FALLBACK = {
-  traducao: "Olá! Dei uma olhada no Lote 56 e 57 da Quadra nº 13 (Alvinópolis/MG) e ele está com 2 avisos. O mais simples de resolver: falta o código CIB — o número que identifica o imóvel na Receita Federal e liga o CAR ao registro. Você tem o comprovante do imóvel em mãos?",
+  traducao: "Dei uma olhada no seu imóvel em Alvinópolis/MG e ele tá com 2 pontos pra acertar antes de tudo ficar certo. O mais rápido é o código CIB — é um número da Receita Federal que prova que o imóvel é seu no sistema. Sem ele o cadastro fica incompleto. Você tem o documento do imóvel guardado? (CAFIR ou o boleto do ITR serve)",
   pendencias: [
-    { tipo: "CIB_ausente", gravidade: "alerta", explicacao: "Falta o código CIB do imóvel.", o_que_fazer: "Pegue o comprovante (CAFIR/ITR) e informe o número do CIB." },
-    { tipo: "representante_ausente", gravidade: "alerta", explicacao: "Nenhum representante foi adicionado.", o_que_fazer: "Você pode se adicionar como representante." }
+    { tipo: "CIB ausente", gravidade: "alerta", explicacao: "Falta o número que identifica o imóvel na Receita Federal.", o_que_fazer: "Procure o comprovante do imóvel (o CAFIR ou boleto do ITR) e anote o número de lá." },
+    { tipo: "Responsável não cadastrado", gravidade: "alerta", explicacao: "Não tem ninguém cadastrado como responsável pelo imóvel.", o_que_fazer: "Você mesmo pode se colocar como responsável — é bem rápido de fazer." }
   ],
   regra_aplicada: {
     conceito: "car:Pendencia_CIB",
@@ -75,9 +75,14 @@ const FALLBACK = {
     faixa_exigida_m: 30, deficit_m2: 1800, deficit_ha: 0.18, conforme: false,
     fonte: "Lei 12.651/2012, Art. 4º, I, alínea a", rastro_ontologia: "car:FaixaAPP_ate10"
   },
-  proximo_passo: "Vamos resolver primeiro o CIB. Depois cuidamos do representante.",
+  proximo_passo: "Bora resolver o CIB primeiro — é o mais rápido. Depois a gente cuida do responsável. Você topa?",
   link_sicar: "https://car-sus.dataprev.gov.br/#/",
-  beneficios: ["CRA — Cota de Reserva Ambiental", "Crédito rural (ex.: Pronaf Eco)", "PSA — Pagamento por Serviços Ambientais", "Suspensão de sanções"]
+  beneficios: [
+    "Crédito rural com juro menor (Pronaf Eco e similares)",
+    "Você recebe pra conservar a mata — Pagamento por Serviços Ambientais (PSA)",
+    "Pode vender créditos de reserva pra outros produtores (CRA)",
+    "As multas e restrições ficam suspensas enquanto o CAR tiver regularizado"
+  ]
 };
 
 function agora() {
@@ -96,7 +101,7 @@ function bolha(lado, html) {
 function digitando() {
   const div = document.createElement("div");
   div.className = "bolha entra digitando";
-  div.textContent = "Compadre está digitando…";
+  div.textContent = "Mestre da Terra está verificando…";
   chat.appendChild(div);
   chat.scrollTop = chat.scrollHeight;
   return div;
@@ -148,21 +153,22 @@ function renderResposta(r) {
   if (r.analise_app && !r.analise_app.conforme) {
     const a = r.analise_app;
     html += `<div class="selo" style="border-left-color:#c0561f;background:#fff3ec;color:#b2491a">
-      <b>🛰️ Encontrei um ponto de atenção:</b>
-      sua mata perto d'água está com déficit de <b>${escape(a.deficit_m2)} m²</b>
-      (a lei pede ${escape(a.faixa_exigida_m)} m de faixa).<br>
+      <b>🛰️ Achei um detalhe importante:</b>
+      a faixa de mata na beira do córrego precisa ter ${escape(a.faixa_exigida_m)} metros,
+      mas tá faltando uns <b>${escape(a.deficit_m2)} m²</b> de vegetação.
+      Isso dá pra regularizar — me fala se quer entender como.<br>
       <span class="rastro" style="color:#9c6b4f">${escape(a.fonte)} · ${escape(a.rastro_ontologia)}</span>
     </div>`;
   }
 
   if (r.beneficios && r.beneficios.length) {
-    html += `<div class="lista">Com o CAR em dia, você desbloqueia:<br>`;
+    html += `<div class="lista">Com o CAR em dia, você passa a ter direito a:<br>`;
     for (const b of r.beneficios) html += `<span class="benef">${escape(b)}</span>`;
     html += `</div>`;
   }
 
   if (r.link_sicar) {
-    html += `<br><a class="btn-sistema" href="${escape(r.link_sicar)}" target="_blank" rel="noopener">Ir para o sistema →</a>`;
+    html += `<br><a class="btn-sistema" href="${escape(r.link_sicar)}" target="_blank" rel="noopener">Abrir o sistema do CAR →</a>`;
   }
   return html;
 }
@@ -197,7 +203,7 @@ async function responder(texto) {
   t.remove();
 
   if (etapa === 0) {
-    bolha("in", "Opa, tudo bem? Eu sou o Compadre 🌱 Me manda o <b>número do seu CAR</b> que eu vejo como está a situação do seu imóvel.");
+    bolha("in", "Tudo bom! Me passa o <b>número do seu CAR</b> que eu dou uma olhada na situação do seu imóvel. É aquele código longo que começa com a sigla do estado — tipo <code>MG-3102308-...</code>");
     etapa = 1;
   } else if (etapa === 1) {
     const numero = texto.trim().length > 6 ? texto.trim() : CAR_DEMO;
@@ -236,6 +242,6 @@ entrada.addEventListener("keydown", (e) => { if (e.key === "Enter") mandar(); })
 
 // abertura
 window.addEventListener("load", () => {
-  bolha("in", "👋 Oi! Sou o <b>Compadre</b>, te ajudo a resolver o CAR sem complicação. Manda um “oi” pra começar.");
+  bolha(“in”, “👋 Oi! Sou o <b>Mestre da Terra</b> 🌱 Tô aqui pra te ajudar a resolver o CAR sem precisar entender a lei toda. Manda um <b>oi</b> pra começar.”);
   if (consoleLog) logLinha(`<span class="out">aguardando o produtor… <span class="pisca"></span></span>`);
 });
